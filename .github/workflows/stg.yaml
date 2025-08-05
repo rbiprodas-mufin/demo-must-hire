@@ -1,0 +1,20 @@
+# This workflow will deploy a python cdk project
+name: Staging
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: false
+        type: string
+
+jobs:
+  deploy:
+    name: Staging Stage
+    permissions: write-all
+    uses: 
+      globalmsq/must-github-workflows/.github/workflows/must-hire-frontend-pipeline.yaml@release
+    with:
+      environment: staging
+      version: ${{ inputs.version }}
+      branch_for_release: main
+    secrets: inherit

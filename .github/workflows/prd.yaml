@@ -1,0 +1,20 @@
+# This workflow will to Production
+name: Production
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: false
+        type: string
+
+jobs:
+  deploy:
+    name: Production Stage
+    permissions: write-all
+    uses: 
+      globalmsq/must-github-workflows/.github/workflows/must-hire-frontend-pipeline.yaml@release
+    with:
+      environment: production
+      version: ${{ inputs.version }}
+      branch_for_release: main
+    secrets: inherit

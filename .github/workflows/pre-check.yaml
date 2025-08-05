@@ -1,0 +1,16 @@
+name: Dependency Check, Sonar Scan and Unit Test
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+      - '*patch'
+jobs:
+  unit-test:
+    if: github.actor != 'admin-mufin'
+    name: Dependency Check, Sonar Scan and Unit Test
+    permissions: write-all
+    uses: globalmsq/must-github-workflows/.github/workflows/must-hire-frontend-unittest.yaml@release
+    secrets: inherit
