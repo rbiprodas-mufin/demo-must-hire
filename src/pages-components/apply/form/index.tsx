@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Edit, Edit2 } from "lucide-react";
+import { Edit2 } from "lucide-react";
 import { Label } from "@/components/ui/labels";
 
 export default function ApplicationFormPage() {
