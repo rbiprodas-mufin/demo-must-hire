@@ -28,7 +28,6 @@ import { MetricCard } from "@/components/ui/metric-card";
 import { FilterGroup } from "@/components/filters/FilterGroup";
 import { useUrlFilter } from "@/hooks/useFilters";
 
-// Mock jobs data
 const jobsData = [
   {
     id: 1,

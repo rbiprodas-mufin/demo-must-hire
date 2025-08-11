@@ -19,15 +19,12 @@ import {
   Users,
   FileText,
   Briefcase,
-  UserPlus,
-  Settings,
   LogOut,
   Menu,
   X,
-  Bell,
-  Search,
 } from "lucide-react";
 import { Suspense } from "react";
+import { useSession, signOut } from "next-auth/react";
 
 const menuItems = [
   {
@@ -66,6 +63,9 @@ export default function HRLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { data: session } = useSession();
+
+  const user = session?.user;
 
   const isActive = (path: string) => pathname === path;
 
@@ -186,7 +186,9 @@ export default function HRLayout({ children }: { children: React.ReactNode }) {
                     >
                       <Avatar className="h-8 w-8">
                         <AvatarImage src="/placeholder.svg?height=32&width=32&text=HR" />
-                        <AvatarFallback>HR</AvatarFallback>
+                        <AvatarFallback>
+                          {user?.name?.[0] ?? "U"}
+                        </AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
@@ -198,27 +200,27 @@ export default function HRLayout({ children }: { children: React.ReactNode }) {
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none">
-                          HR Manager
+                          {user?.name}
                         </p>
                         <p className="text-xs leading-none text-muted-foreground">
-                          hr@company.com
+                          {user?.email}
                         </p>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
+                    {/* <DropdownMenuItem
                       className="cursor-pointer"
                       onClick={() => router.push("/admin/profile")}
                     >
                       <Settings className="mr-2 h-4 w-4" />
                       <span>Settings</span>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                     <DropdownMenuItem
+                      onClick={() => signOut()}
                       className="cursor-pointer"
-                      onClick={() => router.push("/")}
                     >
                       <LogOut className="mr-2 h-4 w-4" />
-                      <span>Log out</span>
+                      Sign Out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

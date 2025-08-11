@@ -28,6 +28,8 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MetricCard } from "@/components/ui/metric-card";
+import { useSession } from "next-auth/react";
+import Loader from "@/components/ui/loader";
 
 const applications = [
   {
@@ -164,22 +166,9 @@ const metricsData = [
 ] as const;
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<any>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    // Check if user is logged in
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-    if (!isLoggedIn) {
-      router.push("/login");
-      return;
-    }
-
-    // Get user data
-    const userEmail = localStorage.getItem("userEmail") || "john.doe@email.com";
-    const userName = localStorage.getItem("userName") || "John Doe";
-    setUser({ email: userEmail, name: userName });
-  }, [router]);
+  const { data } = useSession();
+  const user = data?.user as any;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -212,7 +201,7 @@ export default function DashboardPage() {
   };
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (

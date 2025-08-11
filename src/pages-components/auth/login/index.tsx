@@ -1,37 +1,70 @@
 "use client";
 
-import type React from "react";
-
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Briefcase } from "lucide-react";
+import { Briefcase, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/labels";
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const searchParams = useSearchParams();
+const loginSchema = z.object({
+  email: z.string().email({ message: "Invalid email address" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+});
 
-  const redirectPath = searchParams.get("redirect") || "/";
+type LoginFormData = z.infer<typeof loginSchema>;
+
+export default function Login() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect");
+
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
 
-    // Fake login delay for demonstration
-    setTimeout(() => {
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userEmail", email);
-      setIsLoading(false);
+    const res = await signIn("credentials", {
+      ...data,
+      redirect: false,
+    });
 
-      router.push(redirectPath);
-    }, 1000);
+    if (res?.ok) {
+      const sessionRes = await fetch("/api/auth/session");
+      const sessionData = await sessionRes.json();
+      const role = sessionData?.role;
+      const fallbackRedirect =
+        role === "candidate"
+          ? "/onboarding"
+          : role === "admin" || role === "hr"
+          ? "/admin/dashboard"
+          : "/";
+
+      router.push(fallbackRedirect || `/onboarding/redirect=${redirectPath}`);
+    } else {
+      toast.error(res?.error || "Invalid login credentials");
+    }
+
+    setIsLoading(false);
   };
 
   return (
@@ -47,7 +80,9 @@ export default function Login() {
           <p className="mt-2 text-sm text-gray-600">
             Or{" "}
             <Link
-              href={`/signup?redirect=${encodeURIComponent(redirectPath)}`} // ✅ add redirect to signup link
+              href={`/signup?redirect=${encodeURIComponent(
+                redirectPath as string
+              )}`}
               className="font-medium text-blue-primary hover:text-blue-primary/80"
             >
               create a new account
@@ -60,46 +95,71 @@ export default function Login() {
             <CardTitle>Welcome back</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div>
                 <Label htmlFor="email">Email address</Label>
                 <Input
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="mt-1"
                   placeholder="Enter your email"
+                  disabled={isLoading}
+                  {...register("email")}
+                  className="mt-1"
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
 
-              <div>
+              <div className="relative">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="mt-1"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
+                  disabled={isLoading}
+                  {...register("password")}
+                  className="mt-1 pr-10"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 cursor-pointer top-9 text-gray-500 hover:text-gray-700"
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center justify-between">
-                <div className="text-sm">
-                  <Link
-                    href="#"
-                    className="font-medium text-blue-primary hover:text-blue-primary/80"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
+                <Link
+                  href="#"
+                  className="text-sm font-medium text-blue-primary hover:text-blue-primary/80"
+                >
+                  Forgot your password?
+                </Link>
               </div>
 
               <Button className="w-full" type="submit" disabled={isLoading}>
-                {isLoading ? "Signing in..." : "Sign in"}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign in"
+                )}
               </Button>
             </form>
           </CardContent>

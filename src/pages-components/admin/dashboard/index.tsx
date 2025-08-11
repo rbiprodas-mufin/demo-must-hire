@@ -15,6 +15,7 @@ import {
   Target,
   Award,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const dashboardData = {
   metrics: {
@@ -101,6 +102,8 @@ const dashboardData = {
 };
 
 export default function AdminDashboard() {
+  const { data } = useSession();
+  const user = data?.user;
   const getStatusColor = (status: string) => {
     switch (status) {
       case "review":
@@ -140,7 +143,7 @@ export default function AdminDashboard() {
       {/* Welcome Section */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">
-          Welcome to HR Dashboard
+          Welcome to {user?.name}
         </h1>
         <p className="text-gray-600">
           Monitor your recruitment activities and manage hiring processes

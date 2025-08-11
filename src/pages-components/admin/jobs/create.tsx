@@ -1,246 +1,358 @@
 "use client";
 
-import type React from "react";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
+  Form,
+  Input,
   Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ArrowLeft, Save, X } from "lucide-react";
-import { Label } from "@/components/ui/labels";
+  DatePicker,
+  Card,
+  Row,
+  Col,
+  InputNumber,
+  Space,
+} from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useCreateJob } from "@/apis/jobs";
+import { CreateJobPayload } from "@/types/job";
+import "@ant-design/v5-patch-for-react-19";
+import dayjs from "dayjs";
+import { Button } from "@/components/ui/button";
+
+const { TextArea } = Input;
+const { Option } = Select;
+
+const departments = [
+  "Engineering",
+  "Product",
+  "Design",
+  "Marketing",
+  "Sales",
+  "HR",
+  "Finance",
+];
 
 export default function CreateJob() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    title: "",
-    department: "",
-    location: "",
-    type: "Full-time",
-    salary: "",
-    description: "",
-    requirements: "",
-    benefits: "",
-    priority: "medium",
-    closingDate: "",
-  });
+  const { mutate: createJob, isPending } = useCreateJob();
+  const [form] = Form.useForm();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Creating job:", formData);
-    router.push("/admin/jobs");
-  };
+  const onFinish = (values: any) => {
+    const cleanArray = (arr: string[]) =>
+      arr.map((item) => item.trim()).filter(Boolean);
 
-  const handleCancel = () => {
-    router.push("/admin/jobs");
+    const payload: CreateJobPayload = {
+      ...values,
+      title: values.title.trim(),
+      description: values.description.trim(),
+      responsibilities: cleanArray(values.responsibilities),
+      benefits: cleanArray(values.benefits),
+      required_skills: cleanArray(values.required_skills),
+      education_requirements: values.education_requirements.trim(),
+      department: values.department.trim(),
+      location: values.location.trim(),
+      salary_min: Number(values.salary_min),
+      salary_max: Number(values.salary_max),
+      application_deadline: values.application_deadline.toISOString(),
+      is_remote: values.location.trim().toLowerCase() === "remote",
+    };
+
+    createJob(payload, {
+      onSuccess: () => {
+        router.push("/admin/jobs");
+      },
+    });
   };
 
   return (
-    <div className="p-6 max-w-full mx-auto space-y-6">
+    <div style={{ padding: 24 }}>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Create New Job</h1>
-            <p className="text-gray-600">
-              Fill in the details to create a new job posting
-            </p>
-          </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 24,
+        }}
+      >
+        <div>
+          <h1 style={{ fontSize: 20, fontWeight: "bold" }}>Create New Job</h1>
+          <p style={{ color: "#666" }}>
+            Fill in the details to create a new job posting
+          </p>
         </div>
-        <Button variant="outline" size="sm" onClick={handleCancel}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Jobs
+        <Button onClick={() => router.push("/admin/jobs")}>
+          <ArrowLeftOutlined /> Back to Jobs
         </Button>
       </div>
 
-      <Card className="bg-white shadow-lg">
-        <CardHeader>
-          <CardTitle>Job Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Basic Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="title">Job Title *</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  placeholder="e.g., Senior Frontend Developer"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="department" className="mb-[10px]">
-                  Department *
-                </Label>
-                <Select
-                  value={formData.department}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, department: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select department" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Engineering">Engineering</SelectItem>
-                    <SelectItem value="Product">Product</SelectItem>
-                    <SelectItem value="Design">Design</SelectItem>
-                    <SelectItem value="Marketing">Marketing</SelectItem>
-                    <SelectItem value="Sales">Sales</SelectItem>
-                    <SelectItem value="HR">Human Resources</SelectItem>
-                    <SelectItem value="Finance">Finance</SelectItem>
-                  </SelectContent>
+      {/* Form */}
+      <Card>
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={onFinish}
+          initialValues={{
+            title: "",
+            description: "",
+            responsibilities: [],
+            benefits: [],
+            required_skills: [],
+            education_requirements: "",
+            department: "",
+            location: "",
+            job_type: "full_time",
+            experience_level: "entry",
+            salary_min: 0,
+            salary_max: 0,
+            salary_currency: "USD",
+            is_remote: true,
+            max_applications: 0,
+            status: "active",
+          }}
+        >
+          <Form.Item
+            label="Job Title"
+            name="title"
+            rules={[{ required: true, message: "Job title is required" }]}
+          >
+            <Input placeholder="Frontend Developer" size="large" />
+          </Form.Item>
+
+          <Form.Item
+            label="Description"
+            name="description"
+            rules={[{ required: true, message: "Description is required" }]}
+          >
+            <TextArea rows={5} size="large" />
+          </Form.Item>
+
+          {/* Responsibilities */}
+          <Form.Item
+            label="Responsibilities"
+            name="responsibilities"
+            rules={[
+              { required: true, message: "Responsibilities are required" },
+            ]}
+          >
+            <Select
+              mode="tags"
+              tokenSeparators={[","]}
+              placeholder="Type a responsibility and press Enter"
+              size="large"
+            />
+          </Form.Item>
+
+          {/* Benefits */}
+          <Form.Item
+            label="Benefits"
+            name="benefits"
+            rules={[{ required: true, message: "Benefits are required" }]}
+          >
+            <Select
+              mode="tags"
+              tokenSeparators={[","]}
+              placeholder="Type a benefit and press Enter"
+              size="large"
+            />
+          </Form.Item>
+
+          {/* Required Skills */}
+          <Form.Item
+            label="Required Skills"
+            name="required_skills"
+            rules={[{ required: true, message: "Skills are required" }]}
+          >
+            <Select
+              mode="tags"
+              tokenSeparators={[","]}
+              placeholder="Type a skill and press Enter"
+              size="large"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Education Requirements"
+            name="education_requirements"
+            rules={[
+              { required: true, message: "Education requirement is required" },
+            ]}
+          >
+            <Input placeholder="Bachelor's degree in..." size="large" />
+          </Form.Item>
+
+          {/* Department & Location */}
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Department"
+                name="department"
+                rules={[{ required: true, message: "Department is required" }]}
+              >
+                <Select placeholder="Select department" size="large">
+                  {departments.map((d) => (
+                    <Option key={d} value={d}>
+                      {d}
+                    </Option>
+                  ))}
                 </Select>
-              </div>
-            </div>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Location"
+                name="location"
+                rules={[{ required: true, message: "Location is required" }]}
+              >
+                <Input placeholder="Remote or City" size="large" />
+              </Form.Item>
+            </Col>
+          </Row>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="location" className="pb-[10px]">
-                  Location *
-                </Label>
-                <Input
-                  id="location"
-                  value={formData.location}
-                  onChange={(e) =>
-                    setFormData({ ...formData, location: e.target.value })
-                  }
-                  placeholder="e.g., San Francisco, CA or Remote"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="type">Job Type *</Label>
-                <Select
-                  value={formData.type}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, type: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Full-time">Full-time</SelectItem>
-                    <SelectItem value="Part-time">Part-time</SelectItem>
-                    <SelectItem value="Contract">Contract</SelectItem>
-                    <SelectItem value="Internship">Internship</SelectItem>
-                  </SelectContent>
+          {/* Job Type & Experience */}
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Job Type"
+                name="job_type"
+                rules={[{ required: true, message: "Job type is required" }]}
+              >
+                <Select size="large">
+                  <Option value="full_time">Full-time</Option>
+                  <Option value="part_time">Part-time</Option>
+                  <Option value="contract">Contract</Option>
+                  <Option value="internship">Internship</Option>
                 </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="salary">Salary Range *</Label>
-                <Input
-                  id="salary"
-                  value={formData.salary}
-                  onChange={(e) =>
-                    setFormData({ ...formData, salary: e.target.value })
-                  }
-                  placeholder="e.g., $80k - $120k"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="priority">Priority</Label>
-                <Select
-                  value={formData.priority}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, priority: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
-                  </SelectContent>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Experience Level"
+                name="experience_level"
+                rules={[
+                  { required: true, message: "Experience level is required" },
+                ]}
+              >
+                <Select size="large">
+                  <Option value="entry">Entry</Option>
+                  <Option value="mid">Mid</Option>
+                  <Option value="senior">Senior</Option>
                 </Select>
-              </div>
-            </div>
+              </Form.Item>
+            </Col>
+          </Row>
 
-            <div>
-              <Label htmlFor="closingDate">Application Closing Date *</Label>
-              <Input
-                id="closingDate"
-                type="date"
-                value={formData.closingDate}
-                onChange={(e) =>
-                  setFormData({ ...formData, closingDate: e.target.value })
-                }
-                required
-              />
-            </div>
+          {/* Salary */}
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item
+                label="Salary Min"
+                name="salary_min"
+                rules={[
+                  { required: true, message: "Minimum salary is required" },
+                ]}
+              >
+                <InputNumber style={{ width: "100%" }} size="large" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Salary Max"
+                name="salary_max"
+                dependencies={["salary_min"]}
+                rules={[
+                  { required: true, message: "Maximum salary is required" },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || value > getFieldValue("salary_min")) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error(
+                          "Salary Max should be greater than Salary Min"
+                        )
+                      );
+                    },
+                  }),
+                ]}
+              >
+                <InputNumber style={{ width: "100%" }} size="large" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Currency"
+                name="salary_currency"
+                rules={[{ required: true, message: "Currency is required" }]}
+              >
+                <Select size="large">
+                  <Option value="USD">USD</Option>
+                  <Option value="EUR">EUR</Option>
+                  <Option value="GBP">GBP</Option>
+                  <Option value="INR">INR</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
 
-            {/* Job Description */}
-            <div>
-              <Label htmlFor="description">Job Description *</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-                rows={6}
-                placeholder="Describe the role, responsibilities, and what the candidate will be working on..."
-                required
-              />
-            </div>
+          {/* Deadline */}
+          <Form.Item
+            label="Application Deadline"
+            name="application_deadline"
+            rules={[
+              { required: true, message: "Deadline is required" },
+              {
+                validator(_, value) {
+                  if (!value || value.isAfter(dayjs())) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Deadline must be a future date")
+                  );
+                },
+              },
+            ]}
+          >
+            <DatePicker style={{ width: "100%" }} size="large" />
+          </Form.Item>
 
-            <div>
-              <Label htmlFor="requirements">Requirements</Label>
-              <Textarea
-                id="requirements"
-                value={formData.requirements}
-                onChange={(e) =>
-                  setFormData({ ...formData, requirements: e.target.value })
-                }
-                rows={4}
-                placeholder="List the required skills, experience, and qualifications (one per line)&#10;e.g.:&#10;5+ years of React experience&#10;Bachelor's degree in Computer Science&#10;Strong communication skills"
-              />
-            </div>
+          {/* Max Applications */}
+          <Form.Item
+            label="Max Applications"
+            name="max_applications"
+            rules={[
+              { required: true, message: "Max applications is required" },
+            ]}
+          >
+            <InputNumber style={{ width: "100%" }} size="large" />
+          </Form.Item>
 
-            <div>
-              <Label htmlFor="benefits">Benefits & Perks</Label>
-              <Textarea
-                id="benefits"
-                value={formData.benefits}
-                onChange={(e) =>
-                  setFormData({ ...formData, benefits: e.target.value })
-                }
-                rows={4}
-                placeholder="List the benefits and perks offered (one per line)&#10;e.g.:&#10;Health insurance&#10;401k matching&#10;Remote work options&#10;Professional development budget"
-              />
-            </div>
+          {/* Status */}
+          <Form.Item
+            label="Status"
+            name="status"
+            rules={[{ required: true, message: "Status is required" }]}
+          >
+            <Select size="large">
+              <Option value="active">Active</Option>
+              <Option value="inactive">Inactive</Option>
+            </Select>
+          </Form.Item>
 
-            <div className="flex justify-end space-x-4 pt-6 border-t">
-              <Button type="button" variant="outline" onClick={handleCancel}>
-                <X className="h-4 w-4 mr-2" />
+          {/* Buttons */}
+          <Form.Item>
+            <Space style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                variant={"outline"}
+                onClick={() => router.push("/admin/jobs")}
+              >
                 Cancel
               </Button>
-              <Button type="submit">
-                <Save className="h-4 w-4 mr-2" />
-                Create Job
+              <Button loading={isPending}>
+                {isPending ? "Creating..." : "Create Job"}
               </Button>
-            </div>
-          </form>
-        </CardContent>
+            </Space>
+          </Form.Item>
+        </Form>
       </Card>
     </div>
   );
