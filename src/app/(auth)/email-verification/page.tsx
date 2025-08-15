@@ -1,8 +1,8 @@
 import EmailVerification from "@/pages-components/auth/email-verification/page";
 import React from "react";
 
-function EmailVerificationsPage() {
+const EmailVerificationsPage = () => {
   return <EmailVerification />;
-}
+};
 
 export default EmailVerificationsPage;

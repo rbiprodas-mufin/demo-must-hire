@@ -1,6 +1,7 @@
 import DashboardPage from "@/pages-components/user/dashboard";
-import React from "react";
 
-export default function UserDashboardPage() {
+const UserDashboardPage = () => {
   return <DashboardPage />;
-}
+};
+
+export default UserDashboardPage;

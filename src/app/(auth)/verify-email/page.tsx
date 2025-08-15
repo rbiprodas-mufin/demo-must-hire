@@ -2,9 +2,9 @@
 
 import { MailCheck } from "lucide-react";
 
-export default function VerifyEmailPage() {
+const VerifyEmailPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center px-4">
+    <div className="flex justify-center items-center mt-12">
       <div className="bg-white shadow-xl rounded-xl border border-gray-200 p-8 max-w-md w-full text-center space-y-6">
         <div className="flex justify-center">
           <MailCheck className="h-12 w-12 text-blue-600" />
@@ -30,4 +30,6 @@ export default function VerifyEmailPage() {
       </div>
     </div>
   );
-}
+};
+
+export default VerifyEmailPage;
