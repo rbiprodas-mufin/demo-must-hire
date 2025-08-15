@@ -16,9 +16,10 @@ import React from "react";
 function Header() {
   const router = useRouter();
   const { data: session, status } = useSession();
-
   const user = session?.user;
   const role = session?.role;
+  const is_profile_complete = session?.is_profile_complete;
+  console.log("is_profile_complete", is_profile_complete);
 
   return (
     <header className="bg-white border-b">
@@ -34,7 +35,7 @@ function Header() {
 
           {/* Right side */}
           <div className="flex items-center space-x-4">
-            {status === "authenticated" && user ? (
+            {status === "authenticated" && user && is_profile_complete ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="focus:outline-none">
                   <Avatar className="cursor-pointer h-9 w-9">

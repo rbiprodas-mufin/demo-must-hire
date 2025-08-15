@@ -8,6 +8,7 @@ declare module "next-auth" {
     accessToken?: string;
     role?: string;
     id: string;
+    is_profile_complete: boolean;
   }
 }
 
@@ -37,13 +38,15 @@ export const authOptions: NextAuthOptions = {
               role: data.data.user.role,
               token: data.data.access_token,
               refreshToken: data.data.refresh_token,
+              is_profile_complete: data.data.user.is_profile_complete,
             };
           }
+          console.log("message", data);
 
-          return null;
-        } catch (error) {
+          throw new Error(data.message || "Invalid email or password");
+        } catch (error: any) {
           console.error("Authorization error:", error);
-          return null;
+          throw new Error(error.message || "Authorization failed");
         }
       },
     }),
@@ -60,6 +63,7 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = user.token;
         token.id = user.id;
         token.role = user.role;
+        token.is_profile_complete = user.is_profile_complete;
       }
       return token;
     },
@@ -67,6 +71,7 @@ export const authOptions: NextAuthOptions = {
       session.accessToken = token.accessToken as string;
       session.role = token.role as string;
       session.id = token.id as string;
+      session.is_profile_complete = token.is_profile_complete as boolean;
       return session;
     },
   },

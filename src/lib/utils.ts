@@ -23,6 +23,7 @@ export const getStatusColor = (status: string) => {
 };
 
 import type { LucideIcon } from "lucide-react";
+import { CandidateProfile } from "@/types/user";
 
 export type StatusType =
   | "review"
@@ -80,4 +81,33 @@ const jobTypeOptions = [
 export function getJobTypeLabel(value: string): string {
   const found = jobTypeOptions.find((opt) => opt.value === value);
   return found?.label ?? value;
+}
+
+export function sanitizeProfileData(data: any): CandidateProfile {
+  return {
+    ...data,
+    linkedinUrl: data.linkedinUrl ?? "",
+    portfolioUrl: data.portfolioUrl ?? "",
+    summary: data.summary ?? "",
+    currentSalary: data.currentSalary ?? "",
+    expectationSalary: data.expectationSalary ?? "",
+    resumeUrl: data.resumeUrl ?? "",
+    education: data.education ?? "",
+    workHistory: data.workHistory ?? "",
+    availability: data.availability ?? "",
+    workAuthorization: data.workAuthorization ?? "",
+    profileImageUrl: data.profileImageUrl ?? "",
+    firstName: data.firstName ?? "",
+    lastName: data.lastName ?? "",
+    email: data.email ?? "",
+    phone: data.phone ?? "",
+    location: data.location ?? "",
+    currentRole: data.currentRole ?? "",
+    yearsExperience: data.yearsExperience ?? "",
+    skills: Array.isArray(data.skills) ? data.skills : [],
+    jobPreferences: Array.isArray(data.jobPreferences)
+      ? data.jobPreferences
+      : [],
+    languages: Array.isArray(data.languages) ? data.languages : [],
+  };
 }

@@ -52,12 +52,20 @@ export default function Login() {
       const sessionRes = await fetch("/api/auth/session");
       const sessionData = await sessionRes.json();
       const role = sessionData?.role;
-      const fallbackRedirect =
-        role === "candidate"
-          ? "/onboarding"
-          : role === "admin" || role === "hr"
-          ? "/admin/dashboard"
-          : "/";
+      const isProfileComplete = sessionData?.is_profile_complete;
+      let fallbackRedirect = "";
+
+      if (role === "candidate") {
+        if (isProfileComplete) {
+          fallbackRedirect = "/user/dashboard";
+        } else {
+          fallbackRedirect = "/onboarding";
+        }
+      } else if (role === "admin" || role === "hr") {
+        fallbackRedirect = "/admin/dashboard";
+      } else {
+        fallbackRedirect = "/";
+      }
 
       router.push(fallbackRedirect || `/onboarding/redirect=${redirectPath}`);
     } else {

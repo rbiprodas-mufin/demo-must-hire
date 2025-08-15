@@ -8,11 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase } from "lucide-react";
 import { Label } from "@/components/ui/labels";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axiosInstance from "@/lib/axios";
+import { z, ZodError } from "zod";
 import { useState } from "react";
+import axiosInstance from "@/lib/axios";
 
 const signupSchema = z
   .object({
@@ -35,15 +33,38 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
+  const [errors, setErrors] = useState<Partial<SignupFormData>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [formData, setFormData] = useState<SignupFormData>({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const onSubmit = async (data: SignupFormData) => {
+    setIsSubmitting(true);
+    setErrors({});
+
     try {
+      const result = signupSchema.safeParse(data);
+      if (!result.success) {
+        const formErrors: Partial<SignupFormData> = {};
+        for (const issue of result.error.issues) {
+          const field = issue.path[0] as keyof SignupFormData;
+          formErrors[field] = issue.message;
+        }
+
+        setErrors(formErrors);
+        return;
+      }
+
       await axiosInstance.post("/auth/register", {
         email: data.email,
         password: data.password,
@@ -55,7 +76,13 @@ export default function Signup() {
 
       router.push(`/auth/verify-email`);
     } catch (error) {
-      console.log("error", error);
+      if (error instanceof ZodError) {
+        console.error("Zod validation error:", error);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -85,18 +112,24 @@ export default function Signup() {
             <CardTitle>Get started today</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                onSubmit(formData);
+              }}
+              className="space-y-6"
+            >
               <div>
                 <Label htmlFor="username">User Name</Label>
                 <Input
                   id="username"
-                  {...register("username")}
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
                   placeholder="Enter your username"
                 />
                 {errors.username && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.username.message}
-                  </p>
+                  <p className="text-red-500 text-sm mt-1">{errors.username}</p>
                 )}
               </div>
 
@@ -105,13 +138,12 @@ export default function Signup() {
                 <Input
                   id="email"
                   type="email"
-                  {...register("email")}
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Enter your email"
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.email.message}
-                  </p>
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
                 )}
               </div>
 
@@ -119,8 +151,10 @@ export default function Signup() {
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
-                  {...register("password")}
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="Create a password"
                   className="pr-10"
                 />
@@ -132,17 +166,17 @@ export default function Signup() {
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
                 {errors.password && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.password.message}
-                  </p>
+                  <p className="text-red-500 text-sm mt-1">{errors.password}</p>
                 )}
               </div>
               <div className="relative">
                 <Label htmlFor="confirmPassword">Confirm password</Label>
                 <Input
                   id="confirmPassword"
+                  name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  {...register("confirmPassword")}
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
                   placeholder="Confirm your password"
                   className="pr-10"
                 />
@@ -159,7 +193,7 @@ export default function Signup() {
                 </button>
                 {errors.confirmPassword && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors.confirmPassword.message}
+                    {errors.confirmPassword}
                   </p>
                 )}
               </div>

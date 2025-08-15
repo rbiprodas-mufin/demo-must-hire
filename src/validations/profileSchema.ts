@@ -1,0 +1,25 @@
+import { z } from "zod";
+
+export const profileSchema = z.object({
+  first_name: z.string().min(1, "First name is required"),
+  last_name: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(7, "Phone number is required"),
+  address: z.string().min(1, "Address is required"),
+  current_position: z.string().min(1, "Current role is required"),
+  years_experience: z.string().min(1, "Years of experience is required"),
+  skills: z.array(z.string()).min(1, "Please enter at least one skill"),
+  linkedin_url: z.string().url().optional().or(z.literal("")),
+  portfolio_url: z.string().url().optional().or(z.literal("")),
+  summary: z.string().optional(),
+  current_salary: z.string().optional(),
+  expectation_salary: z.string().optional(),
+  resume_url: z.string().optional(),
+  education: z.string().optional(),
+  work_history: z.string().optional(),
+  job_preferences: z.array(z.string()).optional(),
+  availability: z.string().optional(),
+  work_authorization: z.string().optional(),
+  languages: z.array(z.string()).optional(),
+  profile_image_url: z.string().optional(),
+});

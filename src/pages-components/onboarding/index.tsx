@@ -14,7 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
 export default function Onboarding() {
   const [resume, setResume] = useState<File | null>(null);
   const [isParsing, setIsParsing] = useState(false);
@@ -94,7 +93,7 @@ export default function Onboarding() {
         );
         setIsParsing(false);
         toast.success("Resume Uploaded Successfully");
-        push("/onboarding/form");
+        push("/onboarding/profile");
       }
     } catch (error) {
       console.error("Upload error", error);

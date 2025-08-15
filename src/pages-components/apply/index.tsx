@@ -93,7 +93,6 @@ export default function Apply() {
     setIsSubmitting(true);
     // Simulate submit
     setTimeout(() => {
-      // Optionally persist last used cover letter
       localStorage.setItem("lastCoverLetter", coverLetter || "");
       router.push(`/apply/${params.id}/success`);
     }, 1200);

@@ -19,6 +19,7 @@ const nextConfig: NextConfig = {
     "/login",
     "/signup",
     "/", // include this to catch the home page `/`
+    "/onboarding",
   ],
 };
 
