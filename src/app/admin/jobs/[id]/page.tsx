@@ -1,8 +1,7 @@
-import JobManage from "@/pages-components/admin/jobs/view-edit";
-import React from "react";
+import JobManage from "~/features/admin/jobs/view-edit";
 
-function ViewAndEditPage() {
+const ViewAndEditPage = () => {
   return <JobManage />;
-}
+};
 
 export default ViewAndEditPage;

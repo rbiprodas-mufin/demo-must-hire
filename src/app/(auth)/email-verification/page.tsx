@@ -1,5 +1,4 @@
-import EmailVerification from "@/pages-components/auth/email-verification/page";
-import React from "react";
+import EmailVerification from "~/features/auth/email-verification/page";
 
 const EmailVerificationsPage = () => {
   return <EmailVerification />;

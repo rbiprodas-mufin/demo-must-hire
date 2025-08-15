@@ -1,5 +1,5 @@
-import axiosInstance from "@/lib/axios";
-import { CreateJobPayload, Job, JobsResponse } from "@/types/job";
+import axiosInstance from "~/lib/axios";
+import { CreateJobPayload, Job, JobsResponse } from "~/types/job";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 interface GetJobsParams {

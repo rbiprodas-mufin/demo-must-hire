@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { ArrowDownRight, ArrowUpRight, LucideIcon } from "lucide-react";
 import React from "react";
 

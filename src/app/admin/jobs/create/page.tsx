@@ -1,8 +1,7 @@
-import CreateJob from "@/pages-components/admin/jobs/create";
-import React from "react";
+import CreateJob from "~/features/admin/jobs/create";
 
-function CreateJobPage() {
+const CreateJobPage = () => {
   return <CreateJob />;
-}
+};
 
 export default CreateJobPage;

@@ -1,8 +1,7 @@
-import Onboarding from "@/pages-components/onboarding";
-import React from "react";
+import Onboarding from "~/features/onboarding";
 
-function OnboardingPage() {
+const OnboardingPage = () => {
   return <Onboarding />;
-}
+};
 
 export default OnboardingPage;

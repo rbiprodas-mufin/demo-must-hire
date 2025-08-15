@@ -1,8 +1,7 @@
-import AdminDashboard from "@/pages-components/admin/dashboard";
-import React from "react";
+import AdminDashboard from "~/features/admin/dashboard";
 
-function AdminDashboardPage() {
+const AdminDashboardPage = () => {
   return <AdminDashboard />;
-}
+};
 
 export default AdminDashboardPage;

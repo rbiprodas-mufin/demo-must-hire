@@ -1,6 +1,6 @@
-import Link from "next/link";
-import Container from "@/components/container";
 import { BriefcaseIcon } from "lucide-react";
+import Link from "next/link";
+import Container from "~/components/container";
 
 export const AuthHeader = () => {
   return (
@@ -10,7 +10,7 @@ export const AuthHeader = () => {
           <div className="flex items-center gap-3">
             <BriefcaseIcon className="size-7 text-blue-primary/90" />
             <span className="text-xl font-bold text-gray-800">
-              JobBoard
+              MustHire
             </span>
           </div>
         </Link>

@@ -4,8 +4,8 @@ import type React from "react";
 
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "~/components/ui/dropdown-menu";
 import {
   PieChart,
   Users,
@@ -59,7 +59,7 @@ const menuItems = [
   },
 ];
 
-export default function HRLayout({ children }: { children: React.ReactNode }) {
+const HRLayout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -232,4 +232,6 @@ export default function HRLayout({ children }: { children: React.ReactNode }) {
       </div>
     </Suspense>
   );
-}
+};
+
+export default HRLayout;

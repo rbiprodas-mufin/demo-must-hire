@@ -6,12 +6,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { cn } from "@/lib/utils"
+} from "~/components/ui/sidebar"
+import { cn } from "~/lib/utils"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-export function NavMain({
+export const NavMain = ({
   items,
 }: {
   items: {
@@ -19,7 +19,7 @@ export function NavMain({
     url: string
     icon?: React.ReactElement
   }[]
-}) {
+}) => {
   const pathname = usePathname()
   const isActive = (url: string) => pathname === url
 

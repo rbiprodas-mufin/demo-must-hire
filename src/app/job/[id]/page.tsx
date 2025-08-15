@@ -1,6 +1,7 @@
-import JobDetails from '@/pages-components/jobs/details'
-import React from 'react'
+import JobDetails from '~/features/jobs/details'
 
-export default function JobDetailsPage() {
+const JobDetailsPage = () => {
   return <JobDetails />
-}
+};
+
+export default JobDetailsPage;

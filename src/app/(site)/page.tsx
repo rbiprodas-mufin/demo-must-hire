@@ -1,5 +1,7 @@
-import Jobs from "@/pages-components/jobs";
+import Jobs from "~/features/jobs";
 
-export default function Home() {
+const Home = () => {
   return <Jobs />;
-}
+};
+
+export default Home;

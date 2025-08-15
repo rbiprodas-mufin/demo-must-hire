@@ -12,7 +12,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/components/ui/avatar"
+} from "~/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,13 +21,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "~/components/ui/dropdown-menu"
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
+} from "~/components/ui/sidebar"
 
 interface NavUserProps {
   user: {
@@ -38,7 +38,7 @@ interface NavUserProps {
   mode?: "avatar" | "text"
 }
 
-export function NavUser({ user, mode = "avatar" }: NavUserProps) {
+export const NavUser = ({ user, mode = "avatar" }: NavUserProps) => {
   const { isMobile } = useSidebar()
 
   return (

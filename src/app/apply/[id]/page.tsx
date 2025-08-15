@@ -1,7 +1,6 @@
-import Apply from '@/pages-components/apply'
-import React from 'react'
+import Apply from '~/features/apply'
 
-function ApplyPage() {
+const ApplyPage = () => {
   return <Apply />
 }
 

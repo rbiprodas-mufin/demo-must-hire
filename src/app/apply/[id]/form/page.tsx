@@ -1,8 +1,7 @@
-import ApplicationForm from '@/pages-components/apply/form'
-import React from 'react'
+import ApplicationForm from '~/features/apply/form'
 
-function ApplicationFormPage() {
-  return <ApplicationForm/>
-}
+const ApplicationFormPage = () => {
+  return <ApplicationForm />;
+};
 
-export default ApplicationFormPage
+export default ApplicationFormPage;

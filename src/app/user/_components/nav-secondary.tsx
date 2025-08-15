@@ -8,10 +8,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
+} from "~/components/ui/sidebar"
 
-export function NavSecondary({
+export const NavSecondary = ({
   items,
   ...props
 }: {
@@ -20,7 +19,7 @@ export function NavSecondary({
     url: string
     icon: React.ReactElement
   }[]
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) => {
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>

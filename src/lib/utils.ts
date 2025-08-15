@@ -23,7 +23,7 @@ export const getStatusColor = (status: string) => {
 };
 
 import type { LucideIcon } from "lucide-react";
-import { CandidateProfile } from "@/types/user";
+import { CandidateProfile } from "~/types/user";
 
 export type StatusType =
   | "review"

@@ -1,8 +1,7 @@
-import Applicants from "@/pages-components/admin/applicants";
-import React from "react";
+import Applicants from "~/features/admin/applicants";
 
-function ApplicantsPage() {
+const ApplicantsPage = () => {
   return <Applicants />;
-}
+};
 
 export default ApplicantsPage;

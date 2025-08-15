@@ -1,7 +1,6 @@
-import Success from "@/pages-components/apply/success";
-import React from "react";
+import Success from "~/features/apply/success";
 
-function SuccessPage() {
+const SuccessPage = () => {
   return <Success />;
 }
 

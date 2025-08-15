@@ -1,5 +1,5 @@
-import axiosInstance from "@/lib/axios";
-import { CandidateProfile } from "@/types/user";
+import axiosInstance from "~/lib/axios";
+import { CandidateProfile } from "~/types/user";
 import { useMutation } from "@tanstack/react-query";
 
 export const useCreateCandidate = () => {

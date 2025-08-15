@@ -1,8 +1,7 @@
-import Jobs from "@/pages-components/jobs";
-import React from "react";
+import Jobs from "~/features/jobs";
 
-function JobsPage() {
+const JobsPage = () => {
   return <Jobs />;
-}
+};
 
 export default JobsPage;

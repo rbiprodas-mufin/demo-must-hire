@@ -1,8 +1,7 @@
-import AdminUser from "@/pages-components/admin/users";
-import React from "react";
+import AdminUser from "~/features/admin/users";
 
-function AdminUserPage() {
+const AdminUserPage = () => {
   return <AdminUser />;
-}
+};
 
 export default AdminUserPage;

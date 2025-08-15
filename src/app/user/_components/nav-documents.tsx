@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "~/components/ui/dropdown-menu"
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -22,9 +22,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
+} from "~/components/ui/sidebar"
 
-export function NavDocuments({
+export const NavDocuments = ({
   items,
 }: {
   items: {
@@ -32,7 +32,7 @@ export function NavDocuments({
     url: string
     icon: React.ReactElement
   }[]
-}) {
+}) => {
   const { isMobile } = useSidebar()
 
   return (

@@ -1,8 +1,7 @@
-import Applications from "@/pages-components/admin/applications";
-import React from "react";
+import Applications from "~/features/admin/applications";
 
-function ApplicationsPage() {
+const ApplicationsPage = () => {
   return <Applications />;
-}
+};
 
 export default ApplicationsPage;

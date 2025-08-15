@@ -7,7 +7,7 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
+} from "~/components/ui/select";
 
 export interface FilterOption {
   label: string;

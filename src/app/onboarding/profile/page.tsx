@@ -1,7 +1,6 @@
-import OnboardingProfile from "@/pages-components/onboarding/profile";
-import React from "react";
+import OnboardingProfile from "~/features/onboarding/profile";
 
-function OnboardingProfilePage() {
+const OnboardingProfilePage = () => {
   return <OnboardingProfile />;
 }
 
