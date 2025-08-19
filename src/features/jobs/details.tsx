@@ -20,7 +20,7 @@ import Loader from "~/components/ui/loader";
 
 export default function JobDetails() {
   const { data } = useSession();
-  const isLoggedIn = data?.accessToken;
+  const isLoggedIn = data?.user?.accessToken;
   const router = useRouter();
   const params = useParams();
   const jobId = params.id;

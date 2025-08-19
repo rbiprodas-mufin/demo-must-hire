@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Suspense } from "react";
-import Loader from "~/components/ui/loader";
-import Provider from "~/lib/Provider";
 import { cn } from "~/lib/utils";
 import { siteConfig } from "~/config/site";
+import { SessionProvider } from "next-auth/react";
+import { authSession } from "~/auth";
+import ReactQueryProvider from "~/utils/react-query";
+import { Toaster } from "sonner";
 
 import "~/styles/globals.css";
 
@@ -23,24 +24,29 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await authSession();
+
   return (
-    <html lang="en">
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          geistSans.variable,
-          geistMono.variable
-        )}
-      >
-        <Suspense fallback={<Loader />}>
-          <Provider>{children}</Provider>
-        </Suspense>
-      </body>
-    </html>
+    <SessionProvider session={session}>
+      <html lang="en">
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans antialiased",
+            geistSans.variable,
+            geistMono.variable
+          )}
+        >
+          <ReactQueryProvider>
+            {children}
+            <Toaster position="bottom-right" richColors />
+          </ReactQueryProvider>
+        </body>
+      </html>
+    </SessionProvider>
   );
 }

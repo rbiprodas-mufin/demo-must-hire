@@ -27,7 +27,7 @@ export const useFetchJobs = (filters: GetJobsParams) => {
   return useQuery<JobsResponse>({
     queryKey: ["jobs", filters],
     queryFn: async () => {
-      const response = await axiosInstance.get("/jobs/", {
+      const response = await axiosInstance.get("/jobs/get-jobs", {
         params: {
           skip: filters.skip ?? 0,
           limit: filters.limit ?? 10,

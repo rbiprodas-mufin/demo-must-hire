@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Upload, FileText, X, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import axiosInstance from "~/lib/axios";
 import {
   Dialog,
@@ -69,7 +69,7 @@ export default function Onboarding() {
 
   const handleContinue = async () => {
     if (!resume) {
-      toast.warn("Please upload your resume to continue");
+      toast.error("Please upload your resume to continue");
       return;
     }
 

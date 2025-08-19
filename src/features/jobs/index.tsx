@@ -7,10 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { useRouter } from "next/navigation";
 import { useUrlFilter } from "~/hooks/useFilters";
 import { FilterGroup, FilterItem } from "~/components/filters/FilterGroup";
-import { useFetchJobs } from "~/apis/jobs";
 import { formatDate, getJobTypeLabel } from "~/lib/utils";
 import { useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
+import { useGetJobsQuery } from "./apis/queries";
 
 type JobFilters = {
   search?: string;
@@ -23,7 +23,7 @@ export default function Jobs() {
   const { filters, setFilters } = useUrlFilter<JobFilters>();
   const [searchValue, setSearchValue] = useState(filters.search ?? "");
 
-  const { data, isLoading } = useFetchJobs({
+  const jobsQuery = useGetJobsQuery({
     limit: 10,
     search: searchValue ?? "",
     skip: 0,
@@ -31,7 +31,10 @@ export default function Jobs() {
     ...(filters.type && { type: filters.type }),
   });
 
-  const filteredJobs = data?.data.jobs;
+  console.log("jobsQuery", jobsQuery);
+
+  const filteredJobs = jobsQuery.data?.data;
+
   const debouncedSetSearch = useMemo(() => {
     return debounce((value: string) => {
       setFilters((prev) => ({
@@ -67,18 +70,7 @@ export default function Jobs() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <section className="bg-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Find Your Dream Job
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Discover opportunities that match your skills and aspirations
-          </p>
-        </div>
-      </section>
-
+    <div className="">
       <section className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row gap-4">
@@ -113,7 +105,7 @@ export default function Jobs() {
         </div>
 
         <div className="grid gap-6">
-          {isLoading ? (
+          {jobsQuery.isLoading ? (
             [...Array(3)].map((_, i) => (
               <div
                 key={i}

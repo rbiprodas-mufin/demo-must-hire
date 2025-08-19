@@ -9,12 +9,18 @@ export type CurrentUser = {
 
 export interface IUser {
   id: string;
-  name: string;
+  // name: string;
+  username: string;
   email: string;
-  photo?: string;
-  isAdmin?: boolean;
-  status?: string;
-  roles?: string[];
+  role: string;
+  is_active: boolean;
+  is_email_verified: boolean;
+  is_profile_complete: boolean;
+  // avatar: string;
+  // isAdmin: boolean;
+  // status?: string;
+  // roles?: string[];
+  // photo?: string;
 }
 
 export type ITokenResponse = {

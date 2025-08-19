@@ -7,13 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { toast } from "react-toastify";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Briefcase, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Label } from "~/components/ui/labels";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -44,32 +44,37 @@ export default function Login() {
     setIsLoading(true);
 
     const res = await signIn("credentials", {
-      ...data,
+      email: data.email,
+      password: data.password,
       redirect: false,
+      // callbackUrl: absoluteUrl("/dashboard"),
     });
+
+    if (res?.error) {
+      toast.error( "Invalid login credentials");
+      setIsLoading(false);
+      return;
+    }
 
     if (res?.ok) {
       const sessionRes = await fetch("/api/auth/session");
       const sessionData = await sessionRes.json();
-      const role = sessionData?.role;
-      const isProfileComplete = sessionData?.is_profile_complete;
+      const user = sessionData?.user;
       let fallbackRedirect = "";
 
-      if (role === "candidate") {
-        if (isProfileComplete) {
+      if (user?.role === "candidate") {
+        if (user?.is_profile_complete) {
           fallbackRedirect = "/user/dashboard";
         } else {
           fallbackRedirect = "/onboarding";
         }
-      } else if (role === "admin" || role === "hr") {
+      } else if (user?.role === "admin" || user?.role === "hr") {
         fallbackRedirect = "/admin/dashboard";
       } else {
         fallbackRedirect = "/";
       }
 
       router.push(fallbackRedirect || `/onboarding/redirect=${redirectPath}`);
-    } else {
-      toast.error(res?.error || "Invalid login credentials");
     }
 
     setIsLoading(false);

@@ -6,17 +6,22 @@ const userRoutes = ["/user"];
 const authPages = ["/login", "/signup"];
 const onboardingPage = "/onboarding";
 
+// export { authSession as middleware } from "~/auth";
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+    
   const token = await getToken({
     req: request,
-    secret: process.env.NEXT_AUTH_SECRET,
+    secret: process.env.AUTH_SECRET,
   });
 
   const isAuthenticated = !!token;
-  const userRole = token?.role;
-  const { pathname } = request.nextUrl;
-  console.log("pathname", pathname);
-  const isProfileComplete = token?.is_profile_complete;
+  const user = token?.user;
+  const userRole = user?.role;
+  const isProfileComplete = user?.is_profile_complete;
+
+  // console.log("pathname", pathname, token);
 
   // 🔐 ADMIN ROUTES
   if (adminRoutes.some((route) => pathname.startsWith(route))) {
@@ -54,7 +59,7 @@ export async function middleware(request: NextRequest) {
   if (authPages.includes(pathname) && isAuthenticated) {
     const redirectUrl =
       userRole === "admin"
-        ? "/admin"
+        ? "/admin/dashboard"
         : userRole === "candidate"
         ? "/user/dashboard"
         : "/";
@@ -63,3 +68,7 @@ export async function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};

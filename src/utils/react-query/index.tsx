@@ -17,7 +17,7 @@ const queryClientOptions = {
 //   },
 // });
 
-const ReactQueryPvorider: React.FC<PropsWithChildren> = ({ children }) => {
+const ReactQueryProvider: React.FC<PropsWithChildren> = ({ children }) => {
   // Create a query client instance
   const [queryClient] = useState(() => new QueryClient(queryClientOptions));
 
@@ -29,4 +29,4 @@ const ReactQueryPvorider: React.FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export default ReactQueryPvorider;
+export default ReactQueryProvider;

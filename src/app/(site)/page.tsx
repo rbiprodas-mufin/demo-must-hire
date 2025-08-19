@@ -1,7 +1,7 @@
-import Jobs from "~/features/jobs";
+import HomeScreen from "~/features/home";
 
 const Home = () => {
-  return <Jobs />;
+  return <HomeScreen />;
 };
 
 export default Home;
