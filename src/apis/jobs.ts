@@ -23,31 +23,3 @@ export const useCreateJob = () => {
   });
 };
 
-export const useFetchJobs = (filters: GetJobsParams) => {
-  return useQuery<JobsResponse>({
-    queryKey: ["jobs", filters],
-    queryFn: async () => {
-      const response = await axiosInstance.get("/jobs/get-jobs", {
-        params: {
-          skip: filters.skip ?? 0,
-          limit: filters.limit ?? 10,
-          status: filters.status ?? "active",
-          ...(filters.search ? { search: filters.search } : {}),
-          ...(filters.type ? { type: filters.type } : {}),
-        },
-      });
-      return response.data;
-    },
-  });
-};
-
-export const useGetJobById = (id?: string) => {
-  return useQuery<JobResponse>({
-    queryKey: ["job", id],
-    queryFn: async () => {
-      const response = await axiosInstance.get(`/jobs/${id}`);
-      return response.data;
-    },
-    enabled: !!id,
-  });
-};

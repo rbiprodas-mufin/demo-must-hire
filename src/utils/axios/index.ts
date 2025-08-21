@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { getSession } from "next-auth/react"; // client side
-import { authSession } from "~/auth"; // wrapper for getServerSession
+import { authSession } from "~/lib/auth"; // wrapper for getServerSession
 import { siteConfig } from "~/config/site";
 import { publicEndpoints } from "~/constants";
 import { ApiError } from "~/utils/api-utils";

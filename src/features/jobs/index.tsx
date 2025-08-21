@@ -18,7 +18,7 @@ type JobFilters = {
   type?: string;
 };
 
-export default function Jobs() {
+export default function JobsScreen() {
   const router = useRouter();
   const { filters, setFilters } = useUrlFilter<JobFilters>();
   const [searchValue, setSearchValue] = useState(filters.search ?? "");
@@ -31,7 +31,7 @@ export default function Jobs() {
     ...(filters.type && { type: filters.type }),
   });
 
-  console.log("jobsQuery", jobsQuery);
+  // console.log("Jobs", jobsQuery.data);
 
   const filteredJobs = jobsQuery.data?.data;
 
@@ -162,7 +162,7 @@ export default function Jobs() {
                         )}
                     </div>
 
-                    <Button onClick={() => router.push(`/job/${job.id}`)}>
+                    <Button onClick={() => router.push(`/jobs/${job.id}`)}>
                       View Details
                     </Button>
                   </div>

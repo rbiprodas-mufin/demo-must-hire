@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { cn } from "~/lib/utils";
-import { siteConfig } from "~/config/site";
 import { SessionProvider } from "next-auth/react";
-import { authSession } from "~/auth";
+import { Geist, Geist_Mono } from "next/font/google";
+import { siteConfig } from "~/config/site";
+import { authSession } from "~/lib/auth";
+import { cn } from "~/lib/utils";
 import ReactQueryProvider from "~/utils/react-query";
-import { Toaster } from "sonner";
+import { ThemeProvider } from "~/providers/theme-provider";
+import { ToasterProvider } from "~/providers/toast-provider";
 
 import "~/styles/globals.css";
 
@@ -33,7 +34,7 @@ export default async function RootLayout({
 
   return (
     <SessionProvider session={session}>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body
           className={cn(
             "min-h-screen bg-background font-sans antialiased",
@@ -42,8 +43,15 @@ export default async function RootLayout({
           )}
         >
           <ReactQueryProvider>
-            {children}
-            <Toaster position="bottom-right" richColors />
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+              <ToasterProvider />
+            </ThemeProvider>
           </ReactQueryProvider>
         </body>
       </html>

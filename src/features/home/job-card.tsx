@@ -15,7 +15,7 @@ interface JobCardProps {
 
 const JobCard = ({ job }: JobCardProps) => {
   const router = useRouter();
-  console.log(job)
+  // console.log("jobdetails", job)
   return (
     <Card
       key={job.id}
@@ -61,7 +61,7 @@ const JobCard = ({ job }: JobCardProps) => {
               )}
           </div>
 
-          <Button onClick={() => router.push(`/job/${job.id}`)}>
+          <Button onClick={() => router.push(`/jobs/${job.id}`)}>
             View Details
           </Button>
         </div>

@@ -1,19 +1,18 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Briefcase, Eye, EyeOff, Loader2 } from "lucide-react";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { signIn } from "next-auth/react";
-
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Briefcase, Eye, EyeOff, Loader2 } from "lucide-react";
-import { Label } from "~/components/ui/labels";
 import { toast } from "sonner";
+import { z } from "zod";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/labels";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -51,33 +50,29 @@ export default function Login() {
     });
 
     if (res?.error) {
-      toast.error( "Invalid login credentials");
+      toast.error("Invalid login credentials");
       setIsLoading(false);
       return;
     }
 
-    if (res?.ok) {
-      const sessionRes = await fetch("/api/auth/session");
-      const sessionData = await sessionRes.json();
-      const user = sessionData?.user;
-      let fallbackRedirect = "";
+    const sessionRes = await fetch("/api/auth/session");
+    const sessionData = await sessionRes.json();
+    const user = sessionData?.user;
+    let fallbackRedirect = "";
 
-      if (user?.role === "candidate") {
-        if (user?.is_profile_complete) {
-          fallbackRedirect = "/user/dashboard";
-        } else {
-          fallbackRedirect = "/onboarding";
-        }
-      } else if (user?.role === "admin" || user?.role === "hr") {
-        fallbackRedirect = "/admin/dashboard";
+    if (user?.role === "candidate") {
+      if (user?.is_profile_complete) {
+        fallbackRedirect = "/user/dashboard";
       } else {
-        fallbackRedirect = "/";
+        fallbackRedirect = "/onboarding";
       }
-
-      router.push(fallbackRedirect || `/onboarding/redirect=${redirectPath}`);
+    } else if (user?.role === "admin" || user?.role === "hr") {
+      fallbackRedirect = "/admin/dashboard";
+    } else {
+      fallbackRedirect = "/";
     }
 
-    setIsLoading(false);
+    router.push(fallbackRedirect || `/onboarding/redirect=${redirectPath}`);
   };
 
   return (

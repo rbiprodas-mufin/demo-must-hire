@@ -5,7 +5,7 @@ interface ContainerProps {
   children: React.ReactNode;
 }
 
-const Container: React.FC<ContainerProps> = ({ className = "", children }) => {
+export const Container: React.FC<ContainerProps> = ({ className = "", children }) => {
   return (
     <div
       className={cn(
@@ -17,5 +17,3 @@ const Container: React.FC<ContainerProps> = ({ className = "", children }) => {
     </div>
   );
 };
-
-export default Container;

@@ -1,12 +1,14 @@
 'use client'
 
-import JobCard from './JobCard'
-import { IJob } from '../jobs/apis/dto'
-import { useEffect, useMemo, useState } from 'react'
-import { SearchIcon } from 'lucide-react'
-import { Input } from '~/components/ui/input'
-import debounce from "lodash.debounce";
+import { Loader2, SearchIcon } from 'lucide-react'
+import { useMemo, useState } from 'react'
 import { FilterGroup, FilterItem } from '~/components/filters/FilterGroup'
+import { Button } from '~/components/ui/button'
+import { Input } from '~/components/ui/input'
+import { IJob } from '../jobs/apis/dto'
+import { useGetJobsQuery } from '../jobs/apis/queries'
+import JobCard from './job-card'
+import JobSkeleton from './job-skeleton'
 
 type JobFilters = {
   search?: string;
@@ -14,19 +16,17 @@ type JobFilters = {
   type?: string;
 };
 
-interface JobListProps {
-  jobs: IJob[]
-}
-
-const JobList = ({ jobs }: JobListProps) => {
+const JobList = () => {
   const [filters, setFilters] = useState<JobFilters>({
     search: "",
     location: "",
     type: "",
   });
 
+  const { data: jobs, isLoading, isError, refetch } = useGetJobsQuery();
+
   const filteredJobs = useMemo(() => {
-    return jobs.filter((job: IJob) => {
+    return jobs?.data.filter((job: IJob) => {
       const titleMatch = job.title.toLowerCase().includes(filters.search?.toLowerCase() ?? "")
       const typeMatch = filters.type ? job.job_type.toLowerCase().includes(filters.type.toLowerCase()) : true
       const locationMatch = filters.location ? job.location.toLowerCase().includes(filters.location.toLowerCase()) : true
@@ -98,13 +98,28 @@ const JobList = ({ jobs }: JobListProps) => {
           <FilterGroup filters={filterItems} />
         </div>
       </div>
-      <div className='flex flex-col gap-4'>
-        {filteredJobs.map((job: IJob) => (
-          <JobCard key={job.id} job={job} />
-        ))}
-      </div>
+      {isLoading ? (
+        <JobSkeleton />
+      ) : isError ? (
+        <div className="flex flex-col gap-2 justify-center items-center h-full">
+          <p className="text-gray-500">Error fetching jobs</p>
+          <Button size="sm" variant="outline" onClick={() => refetch()}>
+            Retry
+          </Button>
+        </div>
+      ) : (
+        <div className='flex flex-col gap-4'>
+          {filteredJobs?.length && filteredJobs?.length > 0 ? filteredJobs?.map((job: IJob) => (
+            <JobCard key={job.id} job={job} />
+          )) : (
+            <div className="flex justify-center items-center h-full">
+              <p className="text-gray-500">No jobs found</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default JobList

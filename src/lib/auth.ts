@@ -1,12 +1,11 @@
-import { CredentialsSignin, type NextAuthConfig } from "next-auth";
+import NextAuth from "next-auth";
+import { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
+import { siteConfig } from "~/config/site";
+import { graceHandler } from "~/utils/api-utils";
 
-import { siteConfig } from "./config/site";
-import { graceHandler } from "./utils/api-utils";
-
-const authConfig = {
-  // trustHost: true,
+export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
   secret: process.env.AUTH_SECRET,
   pages: {
     signIn: "/login",
@@ -17,16 +16,28 @@ const authConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
     Credentials({
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // id: "credentials",
+      id: "credentials",
       name: "Email Password Login",
       credentials: {
-        email: { name: "email", type: "email", label: "Email", placeholder: "johndoe@gmail.com", required: true },
-        password: { name: "password", type: "password", label: "Password", placeholder: "********", required: true },
+        email: {
+          name: "email",
+          type: "email",
+          label: "Email",
+          placeholder: "johndoe@gmail.com",
+          required: true
+        },
+        password: {
+          name: "password",
+          type: "password",
+          label: "Password",
+          placeholder: "********",
+          required: true
+        },
       },
       authorize: graceHandler(async (credentials) => {
-        // if (!credentials) return null;
+        if (!credentials || !credentials.email || !credentials.password) {
+          return null;
+        }
 
         const payload = {
           email: credentials.email,
@@ -41,32 +52,33 @@ const authConfig = {
         });
 
         const { data, error } = await res.json();
-        // console.log("API Response:", data, error);
+        // console.log("API Response:", data, error, res.ok);
 
         if (!res.ok) {
-          // console.error("API request error:", error);
-          throw new Error(error.message);
+          throw new Error(error?.message || "Invalid credentials");
         }
 
-        if (data.access_token && data.user) {
-          const user = {
-            ...data.user,
-            tokens: {
-              accessToken: data.access_token,
-              refreshToken: data.refresh_token,
-              userId: data.user.id,
-            },
-          };
+        if (!data.access_token || !data.user) return null;
 
-          return user;
-        }
-
-        return null;
+        return {
+          id: data.user.id,
+          email: data.user.email,
+          username: data.user.username,
+          role: data.user.role,
+          is_active: data.user.is_active,
+          is_email_verified: data.user.is_email_verified,
+          is_profile_complete: data.user.is_profile_complete,
+          tokens: {
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            userId: data.user.id,
+          },
+        };
       },
-      async (e: any) => {
-        throw new CredentialsSignin(e.message);
-      },
-    ),
+        async (e: any) => {
+          throw new CredentialsSignin(e.message);
+        },
+      ),
     }),
   ],
   callbacks: {
@@ -87,11 +99,11 @@ const authConfig = {
     async jwt({ token, user, account, trigger, session }) {
       // console.log("calbacks.jwt", token, user, account, trigger, session);
 
-      if (account?.provider === "google") {
-        // const res = await socialLogin({ provider: "google", access_token: account.access_token as string });
-        // const userRes = await queryClient.fetchQuery(getUserQuery(res.data.access_token))
-        // return userRes ? { ...token, tokens: res.data, user: { ...userRes.data, tokens: res.data } } : token;
-      }
+      // if (account?.provider === "google") {
+      //   const res = await socialLogin({ provider: "google", access_token: account.access_token as string });
+      //   const userRes = await queryClient.fetchQuery(getUserQuery(res.data.access_token))
+      //   return userRes ? { ...token, tokens: res.data, user: { ...userRes.data, tokens: res.data } } : token;
+      // }
 
       // if (isTokenExpired(token.tokens.access_token)) {
       //   const refreshedTokens = await refreshToken(token.tokens.refresh_token);
@@ -99,22 +111,19 @@ const authConfig = {
       // }
 
       if (user) {
-        token.user = user;
-        token.tokens = user.tokens;
+        const { tokens, ...restUser } = user;
+        token.user = restUser;
+        token.tokens = tokens;
       }
 
       return token;
     },
-    async session({ session, token }: any) {
+    async session({ session, token }) {
       // console.log("calbacks.session", session, token);
 
+      // token from jwt callback
       if (token) {
         session.user = token.user;
-        // session.user = {
-        //   ...token.user,
-        //   tokens: token.tokens,
-        //   id: token.user.id.toString(),
-        // };
         session.isValid = !!token.user.email;
       }
 
@@ -132,6 +141,4 @@ const authConfig = {
   },
   // Enable debug messages in the console if you are having problems
   debug: process.env.NODE_ENV === "development",
-} satisfies NextAuthConfig;
-
-export default authConfig;
+});

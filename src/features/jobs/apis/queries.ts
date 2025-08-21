@@ -27,12 +27,12 @@ export const useGetJobsQuery = (filters: IGetJobsParams = {}) => {
   });
 };
 
-export const useGetJobQuery = (id: string) => {
+export const useGetJobQuery = (jobId: string) => {
   return useQuery<IJobResponse, Error>({
-    queryKey: ["job", id],
-    enabled: !!id,
+    queryKey: ["jobs", jobId],
+    enabled: !!jobId,
     queryFn: async () => {
-      const response = await apiClient.get<IJobResponse>(`/jobs/${id}`);
+      const response = await apiClient.get<IJobResponse>(`/jobs/${jobId}`);
       return response.data;
     },
   });
