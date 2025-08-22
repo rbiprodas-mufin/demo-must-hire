@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import { siteConfig } from "~/config/site";
+import { credentialLogin } from "~/features/auth/apis/services";
 import { graceHandler } from "~/utils/api-utils";
 
 export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
@@ -35,27 +35,18 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
         },
       },
       authorize: graceHandler(async (credentials) => {
-        if (!credentials || !credentials.email || !credentials.password) {
-          return null;
-        }
+        if (!credentials) return null;
 
         const payload = {
           email: credentials.email,
           password: credentials.password,
         };
 
-        // TODO: implement function to call the api
-        const res = await fetch(`${siteConfig.apiBaseUrl}/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        const { data, success, message } = await credentialLogin(payload);
+        // console.log("API Response:", data, success, message);
 
-        const { data, error } = await res.json();
-        // console.log("API Response:", data, error, res.ok);
-
-        if (!res.ok) {
-          throw new Error(error?.message || "Invalid credentials");
+        if (!success) {
+          throw new Error(message || "Invalid credentials");
         }
 
         if (!data.access_token || !data.user) return null;
@@ -124,6 +115,7 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
       // token from jwt callback
       if (token) {
         session.user = token.user;
+        session.isAuthenticated = true;
         session.isValid = !!token.user.email;
       }
 

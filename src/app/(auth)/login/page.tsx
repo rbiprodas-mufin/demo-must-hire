@@ -1,7 +1,7 @@
-import Login from "~/features/auth/login";
+import LoginScreen from "~/features/auth/login";
 
 const LoginPage = () => {
-  return <Login />;
+  return <LoginScreen />;
 };
 
 export default LoginPage;

@@ -13,7 +13,7 @@ const VerifyEmailPage = () => {
         <h2 className="text-2xl font-bold text-gray-800">Verify Your Email</h2>
 
         <p className="text-gray-600 text-base">
-          We’ve sent a verification link to your email address. Please check
+          We&apos;ve sent a verification link to your email address. Please check
           your inbox and click the link to verify your account.
         </p>
 
@@ -22,7 +22,7 @@ const VerifyEmailPage = () => {
         </p>
 
         <div className="text-sm text-gray-500">
-          Didn’t get the email?{" "}
+          Didn&apos;t get the email?{" "}
           <span className="text-blue-600 hover:underline cursor-pointer">
             Resend verification
           </span>
