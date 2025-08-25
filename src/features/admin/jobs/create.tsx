@@ -347,7 +347,7 @@ export default function CreateJob() {
               >
                 Cancel
               </Button>
-              <Button loading={isPending}>
+              <Button disabled={isPending}>
                 {isPending ? "Creating..." : "Create Job"}
               </Button>
             </Space>

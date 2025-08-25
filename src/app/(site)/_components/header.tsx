@@ -17,7 +17,7 @@ export const Header = () => {
               height={100} 
               className="size-8" 
             /> */}
-            <BriefcaseIcon className="size-7 text-blue-primary/90" />
+            <BriefcaseIcon className="size-7 text-primary/90" />
             <span className="text-xl font-bold text-blue-950">
               MustHire
             </span>

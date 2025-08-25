@@ -312,7 +312,7 @@ export default function JobsPage() {
         <div className="flex space-x-2">
           <Link
             href={"/admin/jobs/create"}
-            className="bg-blue-primary hover:bg-blue-primary/90 flex flex-row py-[6px] px-[20px] rounded-md items-center text-lg text-white"
+            className="bg-primary hover:bg-primary/90 flex flex-row py-[6px] px-[20px] rounded-md items-center text-lg text-white"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Job

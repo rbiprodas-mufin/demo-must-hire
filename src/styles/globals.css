@@ -43,13 +43,10 @@
 
 /* custom colors */
 @theme {
-  --color-gray-header: #f4f9ff;
-  --color-blue-primary: #1e3a8a;
-  --color-gray-primary: #1f1f1f;
+  --color-primary: #1e3a8a;
+  --color-primary-foreground: #eff6ff;
   --color-background: #ffff;
   --color-foreground: #0f172a;
-  --color-primary: #2563eb;
-  --color-primary-foreground: #eff6ff;
   --color-secondary: #dbeafe;
   --color-secondary-foreground: #0f172a;
   --color-muted: #dbeafe;
@@ -143,5 +140,9 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  button, [role="button"] {
+    cursor: pointer;
   }
 }

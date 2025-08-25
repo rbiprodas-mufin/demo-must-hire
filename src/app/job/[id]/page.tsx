@@ -1,7 +1,12 @@
-import JobDetails from '~/features/jobs/details'
+import JobDetails from "~/features/jobs/details";
 
-const JobDetailsPage = () => {
-  return <JobDetails />
+interface JobDetailsPageProps {
+  params: Promise<{ id: string }>;
+}
+
+const JobDetailsPage = async ({ params }: JobDetailsPageProps) => {
+  const { id } = await params;
+  return <JobDetails jobId={id} />;
 };
 
 export default JobDetailsPage;

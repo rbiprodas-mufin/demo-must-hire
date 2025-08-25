@@ -75,8 +75,8 @@ const HRLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="hidden lg:block fixed inset-y-0 left-0 z-50 w-[300px] bg-white shadow-lg">
           <div className="flex items-center justify-between h-16 px-6 border-b">
             <div className="flex items-center">
-              <Briefcase className="h-8 w-8 text-blue-primary" />
-              <span className="ml-2 text-xl font-bold text-gray-primary">
+              <Briefcase className="h-8 w-8 text-primary" />
+              <span className="ml-2 text-xl font-bold">
                 HR Portal
               </span>
             </div>
@@ -90,7 +90,7 @@ const HRLayout = ({ children }: { children: React.ReactNode }) => {
                   onClick={() => router.push(item.path)}
                   className={`w-full  cursor-pointer flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                     isActive(item.path)
-                      ? "bg-blue-primary text-white"
+                      ? "bg-primary text-white"
                       : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   }`}
                 >
@@ -119,7 +119,7 @@ const HRLayout = ({ children }: { children: React.ReactNode }) => {
         >
           <div className="flex items-center justify-between h-16 px-6 border-b">
             <div className="flex items-center">
-              <Briefcase className="h-8 w-8 text-blue-primary" />
+              <Briefcase className="h-8 w-8 text-primary" />
               <span className="ml-2 text-xl font-bold text-gray-primary">
                 HR Portal
               </span>
@@ -144,7 +144,7 @@ const HRLayout = ({ children }: { children: React.ReactNode }) => {
                   }}
                   className={`w-full cursor-pointer flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                     isActive(item.path)
-                      ? "bg-blue-primary text-white"
+                      ? "bg-primary text-white"
                       : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   }`}
                 >

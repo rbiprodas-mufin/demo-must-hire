@@ -244,7 +244,7 @@ export default function DashboardPage() {
                     <div className="flex items-center space-x-3">
                       <div className="w-32 bg-gray-200 rounded-full h-2">
                         <div
-                          className="bg-blue-primary h-2 rounded-full"
+                          className="bg-primary h-2 rounded-full"
                           style={{ width: `${(item.count / 5) * 100}%` }}
                         ></div>
                       </div>
@@ -308,7 +308,7 @@ export default function DashboardPage() {
               <CardTitle>My Applications</CardTitle>
               <Button
                 onClick={() => router.push("/")}
-                className="bg-blue-primary hover:bg-blue-primary/90"
+                className="bg-primary hover:bg-primary/90"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Apply to New Job
