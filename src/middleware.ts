@@ -3,10 +3,10 @@ import { getToken } from "next-auth/jwt";
 
 const adminRoutes = ["/admin"];
 const userRoutes = ["/user"];
-const authPages = ["/login", "/signup"];
+const authPages = ["/login", "/signup", "/verify-email"];
 const onboardingPage = "/onboarding";
 
-// export { authSession as middleware } from "~/auth";
+// export { authSession as middleware } from "~/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

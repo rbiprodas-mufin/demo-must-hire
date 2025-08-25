@@ -14,7 +14,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-export default function Onboarding() {
+
+export default function OnboardingScreen() {
   const [resume, setResume] = useState<File | null>(null);
   const [isParsing, setIsParsing] = useState(false);
   const [resumePreviewUrl, setResumePreviewUrl] = useState<string | null>(null);
@@ -104,14 +105,14 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="bg-gray-50 py-3">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold text-blue-950 mb-1">
             Upload your resume
           </h1>
-          <p className="text-gray-600">
-            We’ll extract your details to speed up your profile setup
+          <p className="text-blue-950">
+            We&apos;ll extract your details to speed up your profile setup
           </p>
         </div>
 
