@@ -1,7 +1,5 @@
 import SignupScreen from "~/features/auth/signup";
 
-const SignupPage = () => {
+export default function SignupPage() {
   return <SignupScreen />;
 }
-
-export default SignupPage

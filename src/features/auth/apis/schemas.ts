@@ -12,12 +12,13 @@ export const RegisterSchema = z.object({
   password: z.string().min(6, "Minimum 6 characters required"),
 });
 
-export const NewPasswordSchema = z.object({
-  password: z.string().min(6, {
-    message: "Minimum 6 characters required",
-  }),
-});
 
-export const ResetSchema = z.object({
+export const ForgotPasswordSchema = z.object({
   email: z.string().email("Invalid email address"),
 });
+
+export const ResetPasswordSchema = z.object({
+  password: z.string().min(6, "Minimum 6 characters required"),
+  confirmPassword: z.string().min(6, "Minimum 6 characters required"),
+});
+

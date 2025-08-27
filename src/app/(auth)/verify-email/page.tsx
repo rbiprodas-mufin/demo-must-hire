@@ -1,7 +1,5 @@
 import VerifyEmailScreen from "~/features/auth/verify-email";
 
-const VerifyEmailPage = () => {
+export default function VerifyEmailPage() {
   return <VerifyEmailScreen />;
-};
-
-export default VerifyEmailPage;
+}

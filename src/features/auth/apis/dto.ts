@@ -20,6 +20,14 @@ export interface IVerifyEmailInput {
   token: string;
 }
 
+export interface IForgotPasswordInput {
+  email: string;
+}
+
+export interface IResetPasswordInput {
+  token: string;
+  new_password: string;
+}
 
 export type ISignupResponse = ApiResponse<IUser>;
 export type ILoginResponse = ApiResponse<{

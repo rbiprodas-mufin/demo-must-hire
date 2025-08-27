@@ -1,7 +1,5 @@
 import LoginScreen from "~/features/auth/login";
 
-const LoginPage = () => {
+export default function LoginPage() {
   return <LoginScreen />;
-};
-
-export default LoginPage;
+}
