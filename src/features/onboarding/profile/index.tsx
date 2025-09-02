@@ -1,24 +1,25 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { useEffect, useMemo, useState } from "react";
+import { useCreateCandidate } from "~/apis/candidates";
+import { Container } from "~/components/container";
 import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
+import { Label } from "~/components/ui/labels";
 import {
-
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Label } from "~/components/ui/labels";
+import { Textarea } from "~/components/ui/textarea";
+import { sanitizeProfileData } from "~/lib/utils";
 import { CandidateProfile } from "~/types/user";
 import { profileSchema } from "~/validations/profileSchema";
-import { sanitizeProfileData } from "~/lib/utils";
-import { useCreateCandidate } from "~/apis/candidates";
 
 
 export default function OnboardingProfile() {
@@ -62,24 +63,22 @@ export default function OnboardingProfile() {
 
         const educationStr = Array.isArray(parsed.education)
           ? parsed.education
-              .map(
-                (edu: any) =>
-                  `${edu.degree || ""}, ${edu.university || ""}, ${
-                    edu.start_date || ""
-                  } - ${edu.end_date || ""}`
-              )
-              .join("\n")
+            .map(
+              (edu: any) =>
+                `${edu.degree || ""}, ${edu.university || ""}, ${edu.start_date || ""
+                } - ${edu.end_date || ""}`
+            )
+            .join("\n")
           : parsed.education || "";
 
         const workHistoryStr = Array.isArray(parsed.workHistory)
           ? parsed.workHistory
-              .map(
-                (work: any) =>
-                  `${work.role || ""}, ${work.company || ""}, ${
-                    work.start_date || ""
-                  } - ${work.end_date || ""}`
-              )
-              .join("\n")
+            .map(
+              (work: any) =>
+                `${work.role || ""}, ${work.company || ""}, ${work.start_date || ""
+                } - ${work.end_date || ""}`
+            )
+            .join("\n")
           : parsed.workHistory || "";
 
         setForm((prev) => ({
@@ -176,10 +175,10 @@ export default function OnboardingProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+    <div className="bg-gray-50 py-3">
+      <Container className="max-w-4xl flex flex-col gap-5 mb-3">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">
             Complete your profile
           </h1>
           <p className="text-gray-600">
@@ -187,7 +186,7 @@ export default function OnboardingProfile() {
           </p>
         </div>
 
-        <Card className="bg-white shadow-lg">
+        <Card>
           <CardHeader>
             <CardTitle>Personal information</CardTitle>
           </CardHeader>
@@ -267,7 +266,7 @@ export default function OnboardingProfile() {
           </CardContent>
         </Card>
 
-        <Card className="mt-6 bg-white shadow-lg">
+        <Card>
           <CardHeader>
             <CardTitle>Professional information</CardTitle>
           </CardHeader>
@@ -376,7 +375,7 @@ export default function OnboardingProfile() {
           </CardContent>
         </Card>
 
-        <Card className="mt-6 bg-white shadow-lg">
+        <Card>
           <CardHeader>
             <CardTitle>Additional information</CardTitle>
           </CardHeader>
@@ -522,12 +521,16 @@ export default function OnboardingProfile() {
           </CardContent>
         </Card>
 
-        <div className="flex justify-end mt-6">
+        <div className="flex justify-end gap-3">
+          <Button variant="outline" onClick={() => router.push("/onboarding")}>
+            <ArrowLeftIcon className="w-4 h-4" /> Back
+          </Button>
           <Button onClick={handleSave} disabled={isSaving}>
             {isSaving ? "Saving..." : "Save and continue"}
           </Button>
         </div>
-      </div>
+
+      </Container>
     </div>
   );
 }

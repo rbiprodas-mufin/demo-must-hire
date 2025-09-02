@@ -117,6 +117,7 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
         session.user = token.user;
         session.isAuthenticated = true;
         session.isValid = !!token.user.email;
+        session.tokens = token.tokens;
       }
 
       return session;

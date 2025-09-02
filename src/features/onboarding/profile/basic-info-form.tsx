@@ -1,0 +1,56 @@
+import React from 'react'
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '~/components/ui/input';
+import { Button } from '~/components/ui/button';
+
+const basicInfoSchema = z.object({
+  first_name: z.string().min(2),
+  last_name: z.string().min(2),
+  email: z.string().email(),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+})
+type BasicInfoForm = z.infer<typeof basicInfoSchema>
+
+interface BasicInformationProps {
+  onBack: () => void;
+  onNext: () => void;
+}
+
+export const BasicInfoForm = ({ onNext, onBack }: BasicInformationProps) => {
+  const form = useForm<BasicInfoForm>({
+    resolver: zodResolver(basicInfoSchema),
+  })
+
+  const onSubmit = (data: BasicInfoForm) => {
+    console.log("Basic Info:", data)
+    // TODO: send API request here
+    onNext()
+  }
+
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <div>
+        <Input placeholder="First Name" {...form.register("first_name")} />
+        {form.formState.errors.first_name && <p className="text-red-500 text-sm">{form.formState.errors.first_name.message}</p>}
+      </div>
+      <div>
+        <Input placeholder="Email" {...form.register("email")} />
+        {form.formState.errors.email && <p className="text-red-500 text-sm">{form.formState.errors.email.message}</p>}
+      </div>
+      <div>
+        <Input placeholder="Phone (optional)" {...form.register("phone")} />
+      </div>
+      <div>
+        <Input placeholder="Address (optional)" {...form.register("address")} />
+      </div>
+      <div>
+        <Button type="button" onClick={onBack}>Back</Button>
+      </div>
+      <Button type="submit">Save & Continue</Button>
+    </form>
+  )
+}

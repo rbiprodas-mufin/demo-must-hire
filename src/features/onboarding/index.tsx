@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Eye, FileText, Upload, UploadIcon, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Upload, FileText, X, Eye } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import axiosInstance from "~/lib/axios";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
+import axiosInstance from "~/lib/axios";
 
 export default function OnboardingScreen() {
   const [resume, setResume] = useState<File | null>(null);
@@ -129,7 +129,7 @@ export default function OnboardingScreen() {
                   onDragOver={handleDragOver}
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <UploadIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
                     Upload your resume
                   </h3>
@@ -207,7 +207,10 @@ export default function OnboardingScreen() {
                 </div>
               )}
 
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-3">
+                <Button variant="outline"  onClick={() => push("/onboarding/profile")}>
+                  Skip
+                </Button>
                 <Button
                   onClick={handleContinue}
                   disabled={!resume || isParsing}

@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
-import OnboardingScreen from "~/features/onboarding";
+import ProfileCompletionScreen from "~/features/onboarding/profile-completion";
 import { authSession } from "~/lib/auth";
 
-export default async function OnboardingPage() {
+export default async function ProfileCompletionPage() {
   const session = await authSession();
 
   if (!session) {
@@ -12,5 +12,5 @@ export default async function OnboardingPage() {
     redirect("/user/dashboard");
   }
 
-  return <OnboardingScreen />;
-};
+  return <ProfileCompletionScreen />
+}

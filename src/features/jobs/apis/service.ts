@@ -16,7 +16,7 @@ export const getJob = async (jobId: string) => {
   return res.data;
 };
 
-const createJob = async (data: ICreateJob) => {
+export const createJob = async (data: ICreateJob) => {
   const res = await apiClient.post<IJobResponse>("/jobs",
     data
   );
@@ -30,7 +30,7 @@ export const updateJob = async (jobId: string, data: IUpdateJob) => {
   return res.data;
 };
 
-const deleteJob = async (jobId: string) => {
+export const deleteJob = async (jobId: string) => {
   const res = await apiClient.delete(`/jobs/${jobId}`);
   return res.data;
 };

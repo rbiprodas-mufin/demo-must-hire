@@ -12,7 +12,8 @@ declare module "next-auth" {
 
   interface Session {
     // user: IUser & DefaultSession["user"];
-    user: IUser & { tokens: ITokenResponse };
+    user: IUser; // & { tokens: ITokenResponse };
+    tokens: ITokenResponse;
     isAuthenticated: boolean;
     isValid: boolean;
   }

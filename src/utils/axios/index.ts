@@ -16,11 +16,11 @@ const getAccessToken = async () => {
   if (typeof window === "undefined") {
     // server-side
     const session = await authSession();
-    return session?.user?.accessToken;
+    return session?.tokens.accessToken;
   } else {
     // client-side
     const session = await getSession();
-    return session?.user?.accessToken;
+    return session?.tokens.accessToken;
   }
 };
 
@@ -53,7 +53,7 @@ apiClient.interceptors.response.use(
       window.location.href = "/login";
     }
 
-    return Promise.reject(new ApiError(message, code));
+    return Promise.reject(error);
   }
 );
 

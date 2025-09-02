@@ -48,7 +48,7 @@ export const useCreateJobMutation = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
-      console.log("Job created:", data);
+      // console.log("Job created:", data);
     },
     onError: (error) => {
       console.error("Error creating job:", error);
@@ -66,7 +66,7 @@ export const useUpdateJobMutation = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
-      console.log("Job updated:", data);
+      // console.log("Job updated:", data);
     },
     onError: (error) => {
       console.error("Error updating job:", error);
@@ -84,7 +84,7 @@ export const useDeleteJobMutation = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
-      console.log("Job deleted:", data);
+      // console.log("Job deleted:", data);
     },
     onError: (error) => {
       console.error("Error deleting job:", error);
