@@ -8,7 +8,7 @@ export const CandidateSchema = z.object({
   phone: z.string().min(1, "Phone is required"),
   address: z.string().min(1, "Address is required"),
   current_position: z.string().min(1, "Current position is required"),
-  years_experience: z.string().min(1, "Years experience is required"),
+  years_experience: z.number("Years experience is required"),
   stack: z.array(z.string()).min(1, "Stack is required"),
   skills: z.array(z.string()).min(1, "Skills are required"),
   linkedin_url: z.string().optional(),
@@ -30,6 +30,14 @@ export const CandidateSchema = z.object({
   updated_at: z.string().optional(),
 });
 
+export const ResumeDataSchema = CandidateSchema.omit({
+  id: true,
+  user_id: true,
+  user_email: true,
+  created_at: true,
+  updated_at: true,
+});
+
 export const CreateCandidateSchema = CandidateSchema.omit({
   id: true,
   user_id: true,
@@ -46,6 +54,8 @@ export const UpdateCandidateSchema = CandidateSchema.omit({
   updated_at: true,
 });
 
+export type TCandidate = z.infer<typeof CandidateSchema>;
+export type TResumeData = z.infer<typeof ResumeDataSchema>;
 export type TCreateCandidate = z.infer<typeof CreateCandidateSchema>;
 export type TUpdateCandidate = z.infer<typeof UpdateCandidateSchema>;
 

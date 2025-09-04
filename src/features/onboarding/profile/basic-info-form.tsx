@@ -34,23 +34,20 @@ export const BasicInfoForm = ({ onNext, onBack }: BasicInformationProps) => {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <Input placeholder="First Name" {...form.register("first_name")} />
-        {form.formState.errors.first_name && <p className="text-red-500 text-sm">{form.formState.errors.first_name.message}</p>}
+        <Input placeholder="First Name" />
       </div>
       <div>
-        <Input placeholder="Email" {...form.register("email")} />
-        {form.formState.errors.email && <p className="text-red-500 text-sm">{form.formState.errors.email.message}</p>}
+        <Input placeholder="Email" />
       </div>
       <div>
-        <Input placeholder="Phone (optional)" {...form.register("phone")} />
+        <Input placeholder="Phone (optional)" />
       </div>
       <div>
-        <Input placeholder="Address (optional)" {...form.register("address")} />
+        <Input placeholder="Address (optional)" />
       </div>
-      <div>
-        <Button type="button" onClick={onBack}>Back</Button>
+      <div className='flex justify-end gap-2'>
+        <Button type="submit">Save & Continue</Button>
       </div>
-      <Button type="submit">Save & Continue</Button>
     </form>
   )
 }

@@ -101,6 +101,17 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
       //   return { ...token, tokens: refreshedTokens.data, user: token.user };
       // }
 
+      // Handle session update trigger
+      if (trigger === "update" && session) {
+        // Merge the updated session data
+        if (session.user) {
+          token.user = { ...token.user, ...session.user };
+        }
+        if (session.tokens) {
+          token.tokens = { ...token.tokens, ...session.tokens };
+        }
+      }
+
       if (user) {
         const { tokens, ...restUser } = user;
         token.user = restUser;

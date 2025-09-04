@@ -8,9 +8,12 @@ export default async function OnboardingPage() {
   if (!session) {
     redirect("/login");
   }
+  
   if (session.user.onboardingCompleted) {
     redirect("/user/dashboard");
   }
 
-  return <OnboardingScreen />;
+  redirect("/onboarding/resume-upload");
+
+  // return <OnboardingScreen />;
 };

@@ -8,7 +8,8 @@ export default async function ProfileCompletionPage() {
   if (!session) {
     redirect("/login");
   }
-  if (session.user.onboardingCompleted) {
+
+  if (session.user.is_profile_complete) {
     redirect("/user/dashboard");
   }
 

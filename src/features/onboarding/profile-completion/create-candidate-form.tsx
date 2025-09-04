@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -12,46 +13,64 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
-import { useCreateCandidateMutation, useGetCandidatesQuery } from "../apis/queries";
+import { useCreateCandidateMutation } from "../apis/queries";
 import { CreateCandidateSchema, TCreateCandidate } from "../apis/schema";
+import { useOnboardingStore } from "../hooks/use-onboarding-store";
+import { useSession } from "next-auth/react";
 
 export const CreateCandidateForm = () => {
+  const { resumeData, clearResume, clearResumeData } = useOnboardingStore();
   const router = useRouter();
+  const { data: session, update: updateSession } = useSession();
+
+  // console.log("resumeData", resumeData);
 
   const form = useForm<TCreateCandidate>({
     resolver: zodResolver(CreateCandidateSchema),
     defaultValues: {
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
-      address: "",
-      current_position: "",
-      years_experience: "",
-      stack: "",
-      skills: "",
-      linkedin_url: "",
-      summary: "",
-      expected_salary: "",
-      last_education: "",
+      first_name: resumeData?.first_name || "",
+      last_name: resumeData?.last_name || "",
+      email: resumeData?.email || "",
+      phone: resumeData?.phone || "",
+      address: resumeData?.address || "",
+      current_position: resumeData?.current_position || "",
+      years_experience: resumeData?.years_experience || undefined,
+      stack: Array.isArray(resumeData?.stack) ? resumeData.stack.join(', ') : resumeData?.stack || "",
+      skills: Array.isArray(resumeData?.skills) ? resumeData.skills.join(', ') : resumeData?.skills || "",
+      linkedin_url: resumeData?.linkedin_url || "",
+      summary: resumeData?.summary || "",
+      expected_salary: resumeData?.expected_salary || "",
+      last_education: resumeData?.last_education || "",
       joining_availability: "1 month",
       // metadata: {},
     },
   })
 
-  const candidateQuery = useGetCandidatesQuery();
-  console.log("candidates", candidateQuery.data);
-
   const { mutate: createCandidate, isPending } = useCreateCandidateMutation();
 
-  const onSubmit = (values: TCreateCandidate) => {
-    // console.log("values", values);
+  const onSubmit = async (values: TCreateCandidate) => {
+    // return console.log("values", values);
 
     createCandidate(values, {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success("Profile completed successfully.");
         form.reset();
-        router.push("/user/dashboard");
+        clearResume();
+        clearResumeData();
+        // update session and set isProfileCompleted to true
+        if (session) {
+          await updateSession({
+            ...session,
+            user: {
+              ...session.user,
+              is_profile_complete: true
+            },
+          });
+          router.push("/user/dashboard");
+        } else {
+          toast.error("Session not found");
+          router.push("/login");
+        }
       },
       onError: (error) => {
         toast.error(error.message || "Something went wrong");
@@ -185,6 +204,7 @@ export const CreateCandidateForm = () => {
                           id={field.name}
                           disabled={isPending}
                           placeholder=""
+                          type="number"
                         />
                       </FormControl>
                       <FormMessage />
@@ -364,8 +384,10 @@ export const CreateCandidateForm = () => {
         </Card>
 
         <div className="flex justify-end gap-3">
-          <Button variant="outline" onClick={() => router.push("/onboarding")}>
-            <ArrowLeftIcon className="w-4 h-4" /> Back
+          <Button asChild variant="outline">
+            <Link href="/onboarding/resume-upload">
+              <ArrowLeftIcon /> Back
+            </Link>
           </Button>
           <Button type="submit" disabled={isPending}>
             {isPending ? "Saving..." : "Save and continue"}

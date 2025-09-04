@@ -2,11 +2,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import apiClient from "~/utils/axios";
 import {
   ICandidateResponse,
-  IUpdateCandidate,
   ICandidatesResponse,
   IGetCandidatesParams,
+  IResumeResponse,
 } from "./dto";
-import { TCreateCandidate } from "./schema";
+import { TCreateCandidate, TUpdateCandidate } from "./schema";
 
 
 export const useGetCandidatesQuery = (filters: IGetCandidatesParams = {}) => {
@@ -62,7 +62,7 @@ export const useUpdateCandidateMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["update-candidate"],
-    mutationFn: async ({ id, ...patch }: IUpdateCandidate) => {
+    mutationFn: async ({ id, ...patch }: TUpdateCandidate) => {
       const response = await apiClient.put<ICandidateResponse>(`/candidates/${id}`, patch);
       return response.data;
     },
@@ -74,6 +74,23 @@ export const useUpdateCandidateMutation = () => {
     },
   });
 };
+
+export function useUploadResumeMutation() {
+  return useMutation<IResumeResponse, Error, { userId: number, file: File }>({
+    mutationKey: ["upload-resume"],
+    mutationFn: async ({ userId, file }: { userId: number, file: File }) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await apiClient.post<IResumeResponse>(
+        `/resume/upload-resume?user_id=${userId}`, 
+        formData, 
+        {timeout: 30000}
+      );
+      return response.data;
+    },
+  });
+}
+
 
 export const useDeleteCandidateMutation = () => {
   const queryClient = useQueryClient();

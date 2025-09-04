@@ -2,9 +2,8 @@ import apiClient from "~/utils/axios";
 import {
   ICandidateResponse, 
   ICandidatesResponse,
-  IUpdateCandidate,
 } from "./dto";
-import { TCreateCandidate } from "./schema";
+import { TCreateCandidate, TUpdateCandidate } from "./schema";
 
 export const getCandidates = async () => {
   const res = await apiClient.get<ICandidatesResponse>("/candidates/");
@@ -23,7 +22,7 @@ export const createCandidate = async (data: TCreateCandidate) => {
   return res.data;
 };
 
-export const updateCandidate = async (candidateId: string, data: IUpdateCandidate) => {
+export const updateCandidate = async (candidateId: string, data: TUpdateCandidate) => {
   const res = await apiClient.put<ICandidateResponse>(`/candidates/${candidateId}`,
     data
   );

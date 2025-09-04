@@ -5,22 +5,34 @@ import { siteConfig } from "~/config/site";
 import { publicEndpoints } from "~/constants";
 import { ApiError } from "~/utils/api-utils";
 
+const API_CONFIG = {
+  timeout: 30000, // Increased timeout
+  retryAttempts: 3,
+  retryDelay: 1000, // Base delay in ms
+  retryStatusCodes: [408, 429, 500, 502, 503, 504], // Retry on these status codes
+};
+
 // Create an Axios instance
 const apiClient = Axios.create({
   baseURL: siteConfig.apiBaseUrl,
-  timeout: 10000,
+  timeout: API_CONFIG.timeout,
 });
 
 // Helper: get access token depending on environment
 const getAccessToken = async () => {
-  if (typeof window === "undefined") {
-    // server-side
-    const session = await authSession();
-    return session?.tokens.accessToken;
-  } else {
-    // client-side
-    const session = await getSession();
-    return session?.tokens.accessToken;
+  try {
+    if (typeof window === "undefined") {
+      // server-side
+      const session = await authSession();
+      return session?.tokens?.accessToken;
+    } else {
+      // client-side
+      const session = await getSession();
+      return session?.tokens?.accessToken;
+    }
+  } catch (error) {
+    console.error("Error getting access token:", error);
+    return null;
   }
 };
 
@@ -52,8 +64,8 @@ apiClient.interceptors.response.use(
     if (status === 401 && typeof window !== "undefined") {
       window.location.href = "/login";
     }
-
-    return Promise.reject(error);
+    return Promise.reject(new ApiError(message, code));
+    // return Promise.reject(error);
   }
 );
 
