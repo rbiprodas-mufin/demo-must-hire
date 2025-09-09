@@ -1,7 +1,5 @@
 "use client"
 
-import * as React from "react"
-
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,16 +8,18 @@ import {
   SidebarMenuItem,
 } from "~/components/ui/sidebar"
 
-export const NavSecondary = ({
-  items,
-  ...props
-}: {
+interface NavSecondaryProps {
   items: {
     title: string
     url: string
-    icon: React.ReactElement
+    icon: React.ElementType
   }[]
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) => {
+}
+
+export const NavSecondary = ({
+  items,
+  ...props
+}: NavSecondaryProps & React.ComponentPropsWithoutRef<typeof SidebarGroup>) => {
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
@@ -27,8 +27,8 @@ export const NavSecondary = ({
           {items.map((item) => (
             <SidebarMenuItem key={item.title} className="inline-flex flex-col justify-center items-center">
               <SidebarMenuButton size="icon" tooltip={item.title} className="flex justify-center items-center hover:bg-blue-100">
-                  {item.icon}
-                  {/* <span>{item.title}</span> */}
+                {item.icon && <item.icon className="size-6" />}
+                {/* <span>{item.title}</span> */}
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

@@ -27,8 +27,12 @@ const getAccessToken = async () => {
       return session?.tokens?.accessToken;
     } else {
       // client-side
-      const session = await getSession();
-      return session?.tokens?.accessToken;
+      const res = await fetch("/api/auth/session");
+      if (!res.ok) return null;
+      const session = await res.json();
+      return session?.tokens?.accessToken ?? null;
+      // const session = await getSession();
+      // return session?.tokens?.accessToken;
     }
   } catch (error) {
     console.error("Error getting access token:", error);

@@ -1,5 +1,6 @@
 "use client"
 
+import { signOut, useSession } from "next-auth/react"
 import {
   TbCreditCard,
   TbDotsVertical,
@@ -7,7 +8,6 @@ import {
   TbNotification,
   TbUserCircle,
 } from "react-icons/tb"
-
 import {
   Avatar,
   AvatarFallback,
@@ -30,16 +30,13 @@ import {
 } from "~/components/ui/sidebar"
 
 interface NavUserProps {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
   mode?: "avatar" | "text"
 }
 
-export const NavUser = ({ user, mode = "avatar" }: NavUserProps) => {
+export const NavUser = ({ mode = "avatar" }: NavUserProps) => {
   const { isMobile } = useSidebar()
+  const { data } = useSession();
+  const user = data?.user;
 
   return (
     <SidebarMenu>
@@ -51,14 +48,14 @@ export const NavUser = ({ user, mode = "avatar" }: NavUserProps) => {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarImage src={user?.image} alt={user?.username} />
+                <AvatarFallback className="rounded-lg">{user?.username?.[0]}</AvatarFallback>
               </Avatar>
               {mode === "text" && <>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate font-medium">{user?.username}</span>
                   <span className="text-muted-foreground truncate text-xs">
-                    {user.email}
+                    {user?.email}
                   </span>
                 </div>
                 <TbDotsVertical className="ml-auto size-4" />
@@ -74,13 +71,13 @@ export const NavUser = ({ user, mode = "avatar" }: NavUserProps) => {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">U</AvatarFallback>
+                  <AvatarImage src={user?.image} alt={user?.username} />
+                  <AvatarFallback className="rounded-lg">{user?.username?.[0]}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate font-medium">{user?.username}</span>
                   <span className="text-muted-foreground truncate text-xs">
-                    {user.email}
+                    {user?.email}
                   </span>
                 </div>
               </div>
@@ -101,7 +98,7 @@ export const NavUser = ({ user, mode = "avatar" }: NavUserProps) => {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut()}>
               <TbLogout />
               Log out
             </DropdownMenuItem>

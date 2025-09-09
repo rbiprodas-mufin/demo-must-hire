@@ -1,9 +1,5 @@
-import React from 'react'
+import ApplicationsScreen from '~/features/user/applications'
 
-const ApplicationsPage = () => {
-  return (
-    <div>ApplicationsPage</div>
-  )
+export default function ApplicationsPage() {
+  return <ApplicationsScreen />
 }
-
-export default ApplicationsPage

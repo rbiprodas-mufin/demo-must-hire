@@ -1,40 +1,28 @@
 "use client"
 
+import { HelpCircleIcon, SearchIcon, SettingsIcon } from "lucide-react"
+import Link from "next/link"
 import * as React from "react"
+import { PiFiles, PiListMagnifyingGlassDuotone, PiReadCvLogo, PiUserCircleCheckDuotone } from "react-icons/pi"
 import {
-  TbCamera,
-  TbChartBar,
   TbDashboard,
   TbDatabase,
-  TbFileAi,
-  TbFileDescription,
   TbFileWord,
-  TbFolder,
-  TbHelp,
   TbInnerShadowTop,
-  TbListDetails,
   TbMessageCircle,
-  TbReport,
-  TbSearch,
-  TbSettings,
-  TbUsers,
+  TbReport
 } from "react-icons/tb"
-
-import { NavDocuments } from "./nav-documents"
-import { NavMain } from "./nav-main"
-import { NavSecondary } from "./nav-secondary"
-import { NavUser } from "./nav-user"
+import { Button } from "~/components/ui/button"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+  SidebarMenuItem
 } from "~/components/ui/sidebar"
-import Link from "next/link"
-import { Button } from "~/components/ui/button"
+import { NavMain } from "./nav-main"
+import { NavSecondary } from "./nav-secondary"
 
 const data = {
   user: {
@@ -46,114 +34,66 @@ const data = {
     {
       title: "Dashboard",
       url: "/user/dashboard",
-      icon: <TbDashboard className="size-5" />,
+      icon: TbDashboard,
     },
     {
       title: "Jobs",
       url: "/user/jobs",
-      icon: <TbListDetails className="size-5" />,
+      icon: PiListMagnifyingGlassDuotone,
     },
     {
       title: "Applications",
       url: "/user/applications",
-      icon: <TbChartBar className="size-5" />,
+      icon: PiFiles,
     },
     {
       title: "Resume",
       url: "/user/resume",
-      icon: <TbFolder className="size-5" />,
+      icon: PiReadCvLogo,
     },
     {
       title: "Profile",
       url: "/user/profile",
-      icon: <TbUsers className="size-5" />,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: <TbCamera />,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: <TbFileDescription />,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: <TbFileAi />,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
+      icon: PiUserCircleCheckDuotone,
     },
   ],
   navSecondary: [
     {
       title: "Search",
       url: "#",
-      icon: <TbSearch />,
+      icon: SearchIcon,
     },
     {
       title: "Get Help",
       url: "#",
-      icon: <TbHelp />,
+      icon: HelpCircleIcon,
     },
     {
       title: "Settings",
       url: "#",
-      icon: <TbSettings />,
+      icon: SettingsIcon,
     },
   ],
   documents: [
     {
       name: "Agent",
       url: "#",
-      icon: <TbDatabase /> ,
+      icon: TbDatabase,
     },
     {
       name: "Refer & Earn",
       url: "#",
-      icon: <TbReport />,
+      icon: TbReport,
     },
     {
       name: "Messages",
       url: "#",
-      icon: <TbMessageCircle />,
+      icon: TbMessageCircle,
     },
     {
       name: "Feedback",
       url: "#",
-      icon: <TbFileWord />,
+      icon: TbFileWord,
     },
   ],
 }

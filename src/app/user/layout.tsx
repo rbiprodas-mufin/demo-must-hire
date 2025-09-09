@@ -2,7 +2,7 @@ import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { AppSidebar } from "./_components/app-sidebar";
 import { SiteHeader } from "./_components/site-header";
 
-const UserLayout = ({ children }: { children: React.ReactNode }) => {
+export default function UserLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider
       style={
@@ -22,14 +22,3 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
     </SidebarProvider>
   );
 };
-
-const Layout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div>
-      {children}
-    </div>
-  );
-};
-
-export default Layout;
-

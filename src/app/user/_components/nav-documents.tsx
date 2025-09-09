@@ -6,7 +6,6 @@ import {
   TbShare3,
   TbTrash,
 } from "react-icons/tb"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,15 +23,15 @@ import {
   useSidebar,
 } from "~/components/ui/sidebar"
 
-export const NavDocuments = ({
-  items,
-}: {
+interface NavDocumentsProps {
   items: {
     name: string
     url: string
-    icon: React.ReactElement
+    icon: React.ElementType
   }[]
-}) => {
+}
+
+export const NavDocuments = ({ items }: NavDocumentsProps) => {
   const { isMobile } = useSidebar()
 
   return (
@@ -43,7 +42,7 @@ export const NavDocuments = ({
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
               <a href={item.url}>
-                {item.icon}
+                {item.icon && <item.icon className="size-5" />}
                 <span>{item.name}</span>
               </a>
             </SidebarMenuButton>

@@ -1,15 +1,5 @@
-export type CurrentUser = {
-  id: string;
-  name: string;
-  username: string;
-  email: string;
-  shortBio: string;
-  image: string;
-};
-
 export interface IUser {
   id: string;
-  // name: string;
   username: string;
   email: string;
   role: string;
@@ -30,14 +20,12 @@ export type ITokenResponse = {
 };
 
 export type ApiResponse<T = any> = {
-  data: T;
   success: boolean;
-  statusCode: number;
   message: string;
-  detail?: string;
+  status_code: number;
+  data: T;
 };
 
-// ------
 export type Unpromisify<T> = T extends Promise<infer R> ? R : T;
 
 export type AnyObject = Record<string, any>;
@@ -58,16 +46,3 @@ export interface PaginatedApiResponse<T> extends ApiResponse<T> {
 }
 
 export type ServerSideResponse<T = any> = ApiResponse<T>;
-
-export type SocketStatus =
-  | "CONNECTING"
-  | "OPEN"
-  | "CLOSED"
-  | "CLOSING"
-  | "UNINSTANTIATED";
-
-export enum ChatShowType {
-  Transcription = "transcription",
-  Translation = "translation",
-  Both = "both",
-}

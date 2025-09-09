@@ -1,7 +1,5 @@
-import DashboardPage from "~/features/user/dashboard";
+import DashboardScreen from "~/features/user/dashboard";
 
-const UserDashboardPage = () => {
-  return <DashboardPage />;
+export default function UserDashboardPage() {
+  return <DashboardScreen />;
 };
-
-export default UserDashboardPage;
