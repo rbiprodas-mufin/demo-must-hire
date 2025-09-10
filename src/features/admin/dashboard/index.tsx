@@ -145,7 +145,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="p-6 mx-auto space-y-6 w-full">
+    <div className="mx-auto space-y-6 w-full">
       {/* Welcome Section */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">
