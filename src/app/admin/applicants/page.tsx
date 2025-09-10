@@ -1,7 +1,5 @@
 import Applicants from "~/features/admin/applicants";
 
-const ApplicantsPage = () => {
+export default function ApplicantsPage() {
   return <Applicants />;
 };
-
-export default ApplicantsPage;

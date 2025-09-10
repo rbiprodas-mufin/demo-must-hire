@@ -22,6 +22,7 @@ export type ITokenResponse = {
 export type ApiResponse<T = any> = {
   success: boolean;
   message: string;
+  detail: string;
   status_code: number;
   data: T;
 };

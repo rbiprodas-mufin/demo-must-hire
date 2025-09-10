@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { Suspense } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { InviteHrModal } from "~/features/auth/invite-hr/invite-hr-modal";
 
 const menuItems = [
   {
@@ -178,6 +179,7 @@ const HRLayout = ({ children }: { children: React.ReactNode }) => {
               </div>
 
               <div className="flex items-center space-x-4">
+                <InviteHrModal />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button

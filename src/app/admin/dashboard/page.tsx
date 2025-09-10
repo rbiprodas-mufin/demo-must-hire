@@ -1,7 +1,5 @@
 import AdminDashboard from "~/features/admin/dashboard";
 
-const AdminDashboardPage = () => {
+export default function AdminDashboardPage() {
   return <AdminDashboard />;
 };
-
-export default AdminDashboardPage;

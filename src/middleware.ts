@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    if (userRole !== "admin") {
+    if (userRole !== "admin" && userRole !== "hr") {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
@@ -58,7 +58,7 @@ export async function middleware(request: NextRequest) {
 
   if (authPages.includes(pathname) && isAuthenticated) {
     const redirectUrl =
-      userRole === "admin"
+      userRole === "admin" || userRole === "hr"
         ? "/admin/dashboard"
         : userRole === "candidate"
         ? "/user/dashboard"

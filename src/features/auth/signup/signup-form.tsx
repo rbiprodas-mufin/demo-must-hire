@@ -1,40 +1,64 @@
 'use client'
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
+import { FormError } from "~/components/form-error";
+import { FormSuccess } from "~/components/form-success";
 import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { useSignupMutation } from "../apis/queries";
-import { RegisterSchema } from "../apis/schemas";
+import { useSignupMutation } from "~/features/auth/apis/queries";
+import { SignupSchema, TSignup } from "~/features/auth/apis/schemas";
+import { decodeJWT } from "~/utils/jwt";
+
 
 export const SignupForm = () => {
-  const router = useRouter();
+  const [success, setSuccess] = useState<string | undefined>("");
+  const [error, setError] = useState<string | undefined>("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const form = useForm<z.infer<typeof RegisterSchema>>({
-    resolver: zodResolver(RegisterSchema),
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
+  useEffect(() => {
+    if (token) {
+      const decodedToken = decodeJWT(token);
+      if (decodedToken) {
+        form.reset({
+          email: decodedToken.email,
+          role: decodedToken.role,
+        });
+      }
+    }
+  }, [token]);
+
+  const form = useForm<TSignup>({
+    resolver: zodResolver(SignupSchema),
     defaultValues: {
       username: "",
       email: "",
       password: "",
+      role: "candidate",
     },
   })
 
   const { mutate: signup, isPending } = useSignupMutation();
 
-  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+  const onSubmit = (values: TSignup) => {
     signup(values, {
       onSuccess: () => {
         toast.success("Account created successfully.");
-        form.reset();
-        router.push("/verify-email");
+        setSuccess("Account created successfully. Please check your email to verify your account.");
+        setIsSubmitted(true);
       },
       onError: (error) => {
         toast.error(error.message || "Something went wrong");
+        setError(error.message || "Something went wrong");
+        setIsSubmitted(true);
       }
     })
   }
@@ -53,7 +77,7 @@ export const SignupForm = () => {
                   <Input
                     {...field}
                     id={field.name}
-                    disabled={isPending}
+                    disabled={isPending || isSubmitted}
                     placeholder="John Doe"
                   />
                 </FormControl>
@@ -71,7 +95,7 @@ export const SignupForm = () => {
                   <Input
                     {...field}
                     id={field.name}
-                    disabled={isPending}
+                    disabled={isPending || isSubmitted || !!token}
                     placeholder="john.doe@example.com"
                     type="email"
                   />
@@ -90,7 +114,7 @@ export const SignupForm = () => {
                   <Input
                     {...field}
                     id={field.name}
-                    disabled={isPending}
+                    disabled={isPending || isSubmitted}
                     placeholder="******"
                     type="password"
                     autoComplete="new-password"
@@ -101,9 +125,11 @@ export const SignupForm = () => {
             )}
           />
         </div>
-        <Button disabled={isPending} type="submit" className="w-full">
+        <Button disabled={isPending || isSubmitted} type="submit" className="w-full">
           Create an account
         </Button>
+        <FormSuccess message={success} />
+        <FormError message={error} />
       </form>
     </Form>
   );

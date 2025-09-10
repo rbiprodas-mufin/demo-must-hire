@@ -1,7 +1,5 @@
 import Applications from "~/features/admin/applications";
 
-const ApplicationsPage = () => {
+export default function ApplicationsPage() {
   return <Applications />;
 };
-
-export default ApplicationsPage;

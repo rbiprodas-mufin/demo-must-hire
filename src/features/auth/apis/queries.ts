@@ -1,12 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import apiClient from "~/utils/axios";
-import { IForgotPasswordInput, IResetPasswordInput, ISignupInput, ISignupResponse, IVerifyEmailInput } from "./dto";
+import { IForgotPasswordInput, IResetPasswordInput, ISignupResponse, IVerifyEmailInput } from "./dto";
+import { TInviteHrEmail, TSignup } from "./schemas";
 
 export const useSignupMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["signup"],
-    mutationFn: async (body: ISignupInput) => {
+    mutationFn: async (body: TSignup) => {
       const { data } = await apiClient.post<ISignupResponse>("/auth/register", body);
       return data;
     },
@@ -28,7 +29,7 @@ export const useVerifyEmailMutation = () => {
       return data;
     },
   });
-};  
+};
 
 export const useForgotPasswordMutation = () => {
   return useMutation({
@@ -45,6 +46,17 @@ export const useResetPasswordMutation = () => {
     mutationKey: ["reset-password"],
     mutationFn: async (params: IResetPasswordInput) => {
       const { data } = await apiClient.post("/auth/reset-password", {}, { params });
+      return data;
+    },
+  });
+};
+
+// HR
+export const useInviteHrEmailMutation = () => {
+  return useMutation({
+    mutationKey: ["invite-hr-email"],
+    mutationFn: async (params: TInviteHrEmail) => {
+      const { data } = await apiClient.post("/auth/send-email-hr-invitation", {}, { params });
       return data;
     },
   });

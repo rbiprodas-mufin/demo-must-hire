@@ -1,7 +1,5 @@
 import JobManage from "~/features/admin/jobs/view-edit";
 
-const ViewAndEditPage = () => {
+export default function ManageJobPage() {
   return <JobManage />;
 };
-
-export default ViewAndEditPage;

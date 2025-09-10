@@ -9,7 +9,7 @@ export default class ServerSideError {
         _error.detail ||
         (error as any).error?.message ||
         "Something went wrong",
-      status_code: _error.statusCode || status_code,
+      status_code: _error.status_code || status_code,
       data: {},
     } as T;
   }

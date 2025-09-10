@@ -1,15 +1,15 @@
 import { ApiResponse, IUser } from "~/types";
 
-export interface ISignupInput {
-  username: string;
-  email: string;
-  password: string;
-}
+// export interface ISignupInput {
+//   username: string;
+//   email: string;
+//   password: string;
+// }
 
-export interface ILoginInput {
-  email: string;
-  password: string;
-}
+// export interface ILoginInput {
+//   email: string;
+//   password: string;
+// }
 
 export interface ISocialLoginInput {
   access_token: string;

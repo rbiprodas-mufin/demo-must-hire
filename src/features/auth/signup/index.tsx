@@ -1,8 +1,7 @@
 import Image from "next/image"
-import { SignupForm } from "./signup-form"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card"
-import { BackButton } from "../components/back-button"
-import { Container } from "~/components/container"
+import { BackButton } from "~/features/auth/components/back-button"
+import { SignupForm } from "./signup-form"
 
 const SignupScreen = () => {
   return (

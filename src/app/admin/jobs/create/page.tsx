@@ -1,7 +1,5 @@
 import CreateJob from "~/features/admin/jobs/create";
 
-const CreateJobPage = () => {
+export default function CreateJobPage() {
   return <CreateJob />;
 };
-
-export default CreateJobPage;

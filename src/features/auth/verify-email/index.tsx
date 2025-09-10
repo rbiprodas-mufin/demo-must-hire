@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircleIcon, Loader2Icon, MailCheckIcon, XCircleIcon } from "lucide-react";
+import { AlertTriangleIcon, CheckCircleIcon, Loader2Icon, XCircleIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "~/components/ui/card";
@@ -17,14 +17,17 @@ export default function VerifyEmail() {
 
   useEffect(() => {
     const verify = async () => {
-      const response = await apiClient.post(`/auth/verify-email?token=${token}`,
+      const response = await apiClient.post("/auth/verify-email",
         {},
-        { validateStatus: () => true }
+        {
+          params: { token },
+          validateStatus: () => true
+        }
       );
       if (response?.status === 200) {
         setStatus("success");
         setTimeout(() => {
-          router.push(`/login?redirect=${response?.data?.data?.redirect_url}`);
+          router.push("/login");
         }, 3000);
       } else {
         setStatus("error");
@@ -41,23 +44,19 @@ export default function VerifyEmail() {
       <div className="flex justify-center items-center h-[calc(100vh-10rem)]">
         <Card className="max-w-md pt-5">
           <CardContent className="flex flex-col gap-3 justify-center items-center text-center">
-            <MailCheckIcon className="h-12 w-12 text-teal-600" />
+            <AlertTriangleIcon className="sizw-12 text-red-600" />
 
-            <h2 className="text-2xl font-bold text-blue-950">Verify Your Email</h2>
+            <h2 className="text-2xl font-bold text-blue-950">Invalid Verification Link</h2>
             <p className="text-gray-600">
-              We&apos;ve sent a verification link to your email address. Please check
-              your inbox and click the link to verify your account.
+              The token or verification link is invalid or has expired. Please check your email for the verification link.
             </p>
 
             <p className="text-sm text-gray-400">
-              Once verified, you&apos;ll be redirected automatically.
+              If you didn&apos;t get the email, please check your spam folder.
             </p>
 
-            <div className="text-sm text-gray-500">
-              Didn&apos;t get the email?{" "}
-              <span className="text-blue-600 hover:underline cursor-pointer">
-                Resend verification
-              </span>
+            <div className="text-sm text-blue-600 hover:underline cursor-pointer">
+              Resend verification link
             </div>
           </CardContent>
         </Card>

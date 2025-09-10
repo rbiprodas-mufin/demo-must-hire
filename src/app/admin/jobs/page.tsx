@@ -1,7 +1,5 @@
 import Jobs from "~/features/admin/jobs";
 
-const JobsPage = () => {
+export default function JobsPage() {
   return <Jobs />;
 };
-
-export default JobsPage;
