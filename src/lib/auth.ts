@@ -2,9 +2,10 @@ import NextAuth from "next-auth";
 import { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import { credentialLogin } from "~/features/auth/apis/services";
-import { graceHandler } from "~/utils/api-utils";
 import { AUTH_SECRET } from "~/constants";
+import { credentialLogin } from "~/features/auth/apis/services";
+import { ITokenResponse, IUser } from "~/types";
+import { graceHandler } from "~/utils/api-utils";
 
 export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
   secret: AUTH_SECRET,
@@ -36,7 +37,6 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
         },
       },
       authorize: graceHandler(async (credentials) => {
-        console.log("🔥 AUTHORIZE CALLED", credentials);
         if (!credentials) return null;
 
         const payload = {
@@ -107,16 +107,16 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
       if (trigger === "update" && session) {
         // Merge the updated session data
         if (session.user) {
-          token.user = { ...token.user, ...session.user };
+          token.user = { ...(token.user || {}), ...session.user } as IUser;
         }
         if (session.tokens) {
-          token.tokens = { ...token.tokens, ...session.tokens };
+          token.tokens = { ...(token.tokens || {}), ...session.tokens } as ITokenResponse;
         }
       }
 
       if (user) {
         const { tokens, ...restUser } = user;
-        token.user = restUser;
+        token.user = restUser as IUser;
         token.tokens = tokens;
       }
 
@@ -124,15 +124,13 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
     },
     async session({ session, token }) {
       // console.log("calbacks.session", session, token);
-      console.log("🔥 SESSION CALLBACK PRODUCTION", { token, session });
 
       // token from jwt callback
       if (token) {
-        session.user = token.user;
+        session.user = token.user as IUser;
         session.isAuthenticated = true;
-        session.isValid = !!token.user.email;
-        session.tokens = token.tokens;
-        debugMessage: "Session callback executed ✅"
+        session.isValid = !!(token.user as IUser).email;
+        session.tokens = token.tokens as ITokenResponse;
       }
 
       return session;
@@ -148,5 +146,5 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
     logo: "/logo.png", // Absolute URL to image
   },
   // Enable debug messages in the console if you are having problems
-  debug: true, //process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === "development",
 });
