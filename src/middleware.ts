@@ -1,63 +1,56 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { authSession as middleware } from "~/lib/auth"; // import your NextAuth handler
+import { NextResponse } from "next/server";
 
 const adminRoutes = ["/admin"];
 const userRoutes = ["/user"];
 const authPages = ["/login", "/signup", "/verify-email"];
 const onboardingPage = "/onboarding";
 
-// export { authSession as middleware } from "~/lib/auth";
+export default middleware(async (req) => {
+  const { pathname } = req.nextUrl;
 
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  
-  const token = await getToken({
-    req: request,
-    secret: process.env.AUTH_SECRET,
-  });
-  console.log("🔥 MIDDLEWARE SESSION", token);
+  const token = req.auth; // decoded JWT from NextAuth
 
   const isAuthenticated = !!token;
   const user = token?.user;
   const userRole = user?.role;
   const isProfileComplete = user?.is_profile_complete;
 
-  // console.log("pathname", pathname, token);
-
   // 🔐 ADMIN ROUTES
   if (adminRoutes.some((route) => pathname.startsWith(route))) {
     if (!isAuthenticated) {
-      const loginUrl = new URL("/login", request.url);
+      const loginUrl = new URL("/login", req.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
 
     if (userRole !== "admin" && userRole !== "hr") {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 
+  // USER ROUTES
   if (userRoutes.some((route) => pathname.startsWith(route))) {
     if (!isAuthenticated) {
-      const loginUrl = new URL("/login", request.url);
+      const loginUrl = new URL("/login", req.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
 
     if (userRole !== "candidate") {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-    if (!isProfileComplete && pathname !== onboardingPage) {
-      return NextResponse.redirect(new URL(onboardingPage, request.url));
+      return NextResponse.redirect(new URL("/", req.url));
     }
 
-    // If profile is complete, allow access to dashboard
+    if (!isProfileComplete && pathname !== onboardingPage) {
+      return NextResponse.redirect(new URL(onboardingPage, req.url));
+    }
+
     if (isProfileComplete && pathname === onboardingPage) {
-      return NextResponse.redirect(new URL("/user/dashboard", request.url));
+      return NextResponse.redirect(new URL("/user/dashboard", req.url));
     }
   }
 
+  // AUTH PAGES
   if (authPages.includes(pathname) && isAuthenticated) {
     const redirectUrl =
       userRole === "admin" || userRole === "hr"
@@ -65,11 +58,11 @@ export async function middleware(request: NextRequest) {
         : userRole === "candidate"
         ? "/user/dashboard"
         : "/";
-    return NextResponse.redirect(new URL(redirectUrl, request.url));
+    return NextResponse.redirect(new URL(redirectUrl, req.url));
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
