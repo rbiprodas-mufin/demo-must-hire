@@ -2,20 +2,20 @@ import NextAuth from "next-auth";
 import { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import { AUTH_SECRET } from "~/constants";
+import { authConfig } from "~/config/auth";
 import { credentialLogin } from "~/features/auth/apis/services";
 import { ITokenResponse, IUser } from "~/types";
 import { graceHandler } from "~/utils/api-utils";
 
 export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
-  secret: AUTH_SECRET,
+  secret: authConfig.secret,
   pages: {
     signIn: "/login",
   },
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: authConfig.googleClientId,
+      clientSecret: authConfig.googleClientSecret,
     }),
     Credentials({
       id: "credentials",
