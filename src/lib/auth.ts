@@ -6,7 +6,7 @@ import { credentialLogin } from "~/features/auth/apis/services";
 import { graceHandler } from "~/utils/api-utils";
 
 export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.AUTH_SECRET || "must-secret",
   pages: {
     signIn: "/login",
   },
@@ -35,6 +35,7 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
         },
       },
       authorize: graceHandler(async (credentials) => {
+        console.log("🔥 AUTHORIZE CALLED", credentials);
         if (!credentials) return null;
 
         const payload = {
@@ -122,6 +123,7 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
     },
     async session({ session, token }) {
       // console.log("calbacks.session", session, token);
+      console.log("🔥 SESSION CALLBACK PRODUCTION", { token, session });
 
       // token from jwt callback
       if (token) {
@@ -129,6 +131,7 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
         session.isAuthenticated = true;
         session.isValid = !!token.user.email;
         session.tokens = token.tokens;
+        debugMessage: "Session callback executed ✅"
       }
 
       return session;
@@ -144,5 +147,5 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
     logo: "/logo.png", // Absolute URL to image
   },
   // Enable debug messages in the console if you are having problems
-  debug: process.env.NODE_ENV === "development",
+  debug: true, //process.env.NODE_ENV === "development",
 });

@@ -10,11 +10,13 @@ const onboardingPage = "/onboarding";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-    
+
+  
   const token = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET,
   });
+  console.log("🔥 MIDDLEWARE SESSION", token);
 
   const isAuthenticated = !!token;
   const user = token?.user;

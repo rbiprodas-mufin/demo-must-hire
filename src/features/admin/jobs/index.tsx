@@ -22,6 +22,7 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
+  PlusIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { MetricCard } from "~/components/ui/metric-card";
@@ -117,7 +118,7 @@ interface JobFilters {
   [key: string]: string;
 }
 
-export default function JobsPage() {
+export default function JobsDashboard() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
@@ -301,22 +302,19 @@ export default function JobsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Jobs Management</h1>
+          <h1 className="text-xl font-bold text-gray-700">Jobs Management</h1>
           <p className="text-gray-600">
             Create, manage, and track job postings
           </p>
         </div>
         <div className="flex space-x-2">
-          <Link
-            href={"/admin/jobs/create"}
-            className="bg-primary hover:bg-primary/90 flex flex-row py-[6px] px-[20px] rounded-md items-center text-lg text-white"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Create Job
-          </Link>
+          <Button asChild>
+            <Link href={"/admin/jobs/create"}>
+              <PlusIcon /> Create Job
+            </Link>
+          </Button>
         </div>
       </div>
 

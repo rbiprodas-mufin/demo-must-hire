@@ -1,5 +1,5 @@
-import JobManage from "~/features/admin/jobs/view-edit";
+import ManageJob from "~/features/admin/jobs/manage-job";
 
 export default function ManageJobPage() {
-  return <JobManage />;
+  return <ManageJob />;
 };

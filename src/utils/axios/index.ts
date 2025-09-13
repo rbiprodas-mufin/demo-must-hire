@@ -63,10 +63,11 @@ apiClient.interceptors.response.use(
   (error) => {
     const { data, status } = error.response || {};
     const message = data?.message || error.message || "Something went wrong";
-    const code = data?.status_code || status || error.code || 500;
+    const code = data?.status_code || status || (error.code ? String(error.code) : 500);
 
     if (status === 401 && typeof window !== "undefined") {
       window.location.href = "/login";
+      return;
     }
     return Promise.reject(new ApiError(message, code));
     // return Promise.reject(error);

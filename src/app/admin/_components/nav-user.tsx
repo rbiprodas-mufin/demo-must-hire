@@ -27,19 +27,18 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar"
+import { IUser } from "~/types"
 
 interface NavUserProps {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
+  user: IUser
 }
 
 export const NavUser = () => {
   const { isMobile } = useSidebar()
-  const { data } = useSession()
-  const user = data?.user
+  const session = useSession()
+  const user = session?.data?.user
+
+  if (!user) return null;
 
   return (
     <SidebarMenu>
@@ -51,7 +50,7 @@ export const NavUser = () => {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarImage src={user.avatar} alt={user.username} />
+                <AvatarImage src={user.image} alt={user.username} />
                 <AvatarFallback className="rounded-lg">{user.username?.[0] ?? "U"}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">

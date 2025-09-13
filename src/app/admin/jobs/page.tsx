@@ -1,5 +1,5 @@
-import Jobs from "~/features/admin/jobs";
+import JobsDashboard from "~/features/admin/jobs";
 
 export default function JobsPage() {
-  return <Jobs />;
+  return <JobsDashboard />;
 };
