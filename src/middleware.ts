@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { AUTH_SECRET } from "./constants";
 
 const adminRoutes = ["/admin"];
 const userRoutes = ["/user"];
@@ -11,12 +12,11 @@ const onboardingPage = "/onboarding";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  
   const token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET,
+    secret: AUTH_SECRET,
   });
-  console.log("🔥 MIDDLEWARE SESSION", token);
+  console.log("🔥 MIDDLEWARE SESSION", token, process.env.AUTH_SECRET, AUTH_SECRET);
 
   const isAuthenticated = !!token;
   const user = token?.user;
