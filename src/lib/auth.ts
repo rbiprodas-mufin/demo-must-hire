@@ -4,9 +4,10 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { credentialLogin } from "~/features/auth/apis/services";
 import { graceHandler } from "~/utils/api-utils";
+import { AUTH_SECRET } from "~/constants";
 
 export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
-  secret: process.env.AUTH_SECRET || "must-secret",
+  secret: AUTH_SECRET,
   pages: {
     signIn: "/login",
   },

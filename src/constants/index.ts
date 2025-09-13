@@ -7,3 +7,5 @@ export const publicEndpoints = [
   "/users/direct-login/verify",
   "/users/reset-password/verify",
 ];
+
+export const AUTH_SECRET = process.env.AUTH_SECRET;
