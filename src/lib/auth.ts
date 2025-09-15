@@ -8,7 +8,8 @@ import { ITokenResponse, IUser } from "~/types";
 import { graceHandler } from "~/utils/api-utils";
 
 export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
-  secret: authConfig.secret,
+  secret: "gXQc/0tmi17OBo41gohCb/nIfbRXn6CepX32eqyd0eQ=",
+  trustHost: true,
   pages: {
     signIn: "/login",
   },
@@ -146,5 +147,5 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
     logo: "/logo.png", // Absolute URL to image
   },
   // Enable debug messages in the console if you are having problems
-  debug: process.env.NODE_ENV === "development",
+  debug: true, // process.env.NODE_ENV === "development",
 });
