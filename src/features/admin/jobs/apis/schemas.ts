@@ -95,7 +95,7 @@ interface IJobData {
   experience_level: "entry" | "mid" | "senior", // careerLevel
   experience_range: string, // "5-8 years"
   employmentType: "full_time" | "part_time" | "contract" | "internship",
-  status: "active" | "inactive" | "draft",
+  status: "draft" | "active" | "paused" | "closed",
 
   // Job Detailed Description
   title: string,
@@ -124,10 +124,10 @@ interface IJobData {
   application_deadline: string,
   auto_close: boolean, // weather auto close after deadline
   tags: string[],
-  source: "LinkedIn" | "Internal" | "Referral", // where job was posted
+  target_sources: string[], // "LinkedIn" | "Internal" | "Referral", // where job will be posted
 
   // people involved in hiring process
-  team: string[],
+  team_members: string[],
   recruiter_email: string,
   hiring_manager_email: string,
   created_by: string,
@@ -138,8 +138,10 @@ interface IJobData {
   approval_status: "pending" | "approved" | "rejected",
 
   // summary stats
-  applicationsCount: 156,
-  interviewsCount: 12,
-  offersCount: 3,
-  hiredCount: 1,
+  summary: {
+    applicationsCount: 156,
+    interviewsCount: 12,
+    offersCount: 3,
+    hiredCount: 1,
+  }
 }
