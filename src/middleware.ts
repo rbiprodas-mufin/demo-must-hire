@@ -10,7 +10,7 @@ export default middleware(async (req) => {
   const { pathname } = req.nextUrl;
 
   const token = req.auth; // decoded JWT from NextAuth
-  console.log("TOKEN MIDDLEWARE:", token);
+
   const isAuthenticated = !!token;
   const user = token?.user;
   const userRole = user?.role;
