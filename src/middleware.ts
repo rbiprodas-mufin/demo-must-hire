@@ -1,5 +1,7 @@
 import { authSession as middleware } from "~/lib/auth"; // import your NextAuth handler
 import { NextResponse } from "next/server";
+import { authConfig } from "./config/auth-config";
+import { siteConfig } from "./config/site";
 
 const adminRoutes = ["/admin"];
 const userRoutes = ["/user"];
@@ -10,7 +12,9 @@ export default middleware(async (req) => {
   const { pathname } = req.nextUrl;
 
   const token = req.auth; // decoded JWT from NextAuth
-  console.log("TOKEN MIDDLEWARE:", token);
+
+  console.log("Env In Middleware:", siteConfig, authConfig);
+
   const isAuthenticated = !!token;
   const user = token?.user;
   const userRole = user?.role;
