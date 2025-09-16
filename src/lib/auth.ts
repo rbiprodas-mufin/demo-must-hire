@@ -8,7 +8,7 @@ import { graceHandler } from "~/utils/api-utils";
 
 export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
   secret: "gXQc/0tmi17OBo41gohCb/nIfbRXn6CepX32eqyd0eQ=", // authConfig.secret,
-  // trustHost: authConfig.trustHost,
+  trustHost: authConfig.trustHost,
   pages: {
     signIn: "/login",
   },
