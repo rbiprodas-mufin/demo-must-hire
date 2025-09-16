@@ -1,13 +1,14 @@
 import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import { authConfig } from "~/config/auth";
+import { authConfig } from "~/config/auth-config";
 import { credentialLogin } from "~/features/auth/apis/services";
 import { ITokenResponse, IUser } from "~/types";
 import { graceHandler } from "~/utils/api-utils";
 
 export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
   secret: authConfig.secret,
+  trustHost: authConfig.trustHost,
   pages: {
     signIn: "/login",
   },
