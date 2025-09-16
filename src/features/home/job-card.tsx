@@ -1,12 +1,10 @@
 "use client"
 
-import { Card, CardHeader, CardTitle } from '~/components/ui/card'
-import { MapPin } from 'lucide-react'
-import { Clock } from 'lucide-react'
-import { Button } from '~/components/ui/button'
-import { formatDate } from '~/lib/utils'
-import { getJobTypeLabel } from '~/lib/utils'
+import { ClockIcon, MapPinIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { Button } from '~/components/ui/button'
+import { Card, CardHeader, CardTitle } from '~/components/ui/card'
+import { formatDate, getJobTypeLabel } from '~/lib/utils'
 import { IJob } from '../jobs/apis/dto'
 
 interface JobCardProps {
@@ -16,6 +14,7 @@ interface JobCardProps {
 const JobCard = ({ job }: JobCardProps) => {
   const router = useRouter();
   // console.log("jobdetails", job)
+
   return (
     <Card
       key={job.id}
@@ -29,12 +28,12 @@ const JobCard = ({ job }: JobCardProps) => {
             </CardTitle>
 
             <div className="flex items-center text-gray-600 mb-2">
-              <MapPin className="h-4 w-4 mr-1" />
+              <MapPinIcon className="h-4 w-4 mr-1" />
               <span>{job.location}</span>
             </div>
 
             <div className="flex items-center text-gray-500 text-sm mb-2">
-              <Clock className="h-4 w-4 mr-1" />
+              <ClockIcon className="h-4 w-4 mr-1" />
               <span>{formatDate(job.created_at)}</span>
               <span className="mx-2">•</span>
               <span>{getJobTypeLabel(job.job_type)}</span>
