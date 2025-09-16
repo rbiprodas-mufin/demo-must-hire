@@ -1,15 +1,14 @@
-import NextAuth from "next-auth";
-import { CredentialsSignin } from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import { authConfig } from "~/config/auth";
+import { authConfig } from "~/config/auth-config";
 import { credentialLogin } from "~/features/auth/apis/services";
 import { ITokenResponse, IUser } from "~/types";
 import { graceHandler } from "~/utils/api-utils";
 
 export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
-  secret: "gXQc/0tmi17OBo41gohCb/nIfbRXn6CepX32eqyd0eQ=",
-  trustHost: true,
+  secret: authConfig.secret,
+  trustHost: authConfig.trustHost,
   pages: {
     signIn: "/login",
   },
@@ -147,5 +146,5 @@ export const { handlers, signIn, signOut, auth: authSession } = NextAuth({
     logo: "/logo.png", // Absolute URL to image
   },
   // Enable debug messages in the console if you are having problems
-  debug: true, // process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === "development",
 });
